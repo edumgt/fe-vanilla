@@ -1,0 +1,37 @@
+# AI 기반 관리자 모드 SaaS, PaaS
+
+> 정적 HTML/Vanilla JavaScript 화면, FastAPI 백엔드, 그리고 AWS·Docker·Kubernetes 배포 스캐폴드를 함께 제공하는 데모 저장소입니다.
+
+## 프로젝트 개요
+
+- `public/`에는 관리자 기능별 HTML 화면과 프론트엔드 JavaScript, CSS, 이미지 및 정적 자산이 있습니다.
+- `backend_fastapi/`는 현재 기준 백엔드이며, 정적 파일 서빙과 로그인/JWT 및 화면용 API를 제공합니다.
+- `backend/`는 레거시 백엔드 구현으로, 신규 변경 기준이 아닙니다.
+- `infra/`와 `scripts/`에는 배포 스캐폴드와 관련 자동화가 있습니다.
+- 루트의 `run_backend.sh`로 로컬 애플리케이션을 실행합니다.
+
+## 주요 문서
+
+- [저장소 개요, 빠른 시작 및 아키텍처](Readme.md)
+- [화면별 API 매핑 및 API 기준](docs/api-mapping.md)
+- [기준 백엔드 안내 및 실행 방법](backend_fastapi/README.md)
+- [AWS 서버리스 배포 스캐폴드](infra/aws/README.md)
+- [Docker Compose 배포 스캐폴드](infra/docker/README.md)
+- [Kubernetes 배포 스캐폴드](infra/k8s/README.md)
+
+## 주요 소스
+
+- `public/`: 정적 화면 및 브라우저 자산
+- `public/assets/js/`: 화면 및 공통 기능의 JavaScript
+- `backend_fastapi/app/`: FastAPI 애플리케이션, API, 모델, 설정
+- `infra/aws/`: AWS SAM 및 Lambda 배포 구성
+- `infra/docker/`: 온프레미스 Docker Compose 및 Nginx 구성
+- `infra/k8s/`: Kubernetes base 리소스와 개발 overlay
+- `scripts/`: AWS 및 CI/CD 관련 스크립트
+- `tests/`: 자동화 테스트
+
+## 실행 및 테스트
+
+- 로컬 실행: `./run_backend.sh`
+- 동영상 AI 판별 모듈 단위 테스트: `node --test tests/video-ai-core.test.mjs`
+- 화면별 API와 확인 항목은 [API 매핑 문서](docs/api-mapping.md)를 참고하세요.
