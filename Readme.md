@@ -26,6 +26,158 @@ APP_ENV=development ./run_backend.sh
 APP_ENV=production ./run_backend.sh
 ```
 
+## DOCS 화면 갤러리
+
+아래 이미지는 모두 `DOCS/` 원본을 README 에 그대로 붙인 것입니다. 화면 성격이 비슷한 것끼리 묶어서 설명을 추가했습니다.
+
+### 1. 진입 화면과 공통 네비게이션
+
+#### 로그인 화면 `public/index.html`
+
+Admin, Manager, Guest 탭을 가진 기본 로그인 진입 화면입니다. 현재 데모 인증 흐름의 시작점입니다.
+
+![로그인 화면](./docs/image.png)
+
+#### 코드관리 기본 화면 `public/system.html`
+
+코드 그룹과 코드명을 테이블로 관리하는 대표 CRUD 화면입니다. 검색, 페이징, 저장 버튼 구성을 보여줍니다.
+
+![코드관리 기본 화면](./docs/image-1.png)
+
+#### 다국어 전환 예시
+
+같은 코드관리 화면을 일본어 라벨 기준으로 노출한 캡처입니다. 우하단 언어 선택 팝업까지 함께 보입니다.
+
+![다국어 전환 예시](./docs/image-2.png)
+
+#### 전체 메뉴 오버레이
+
+상단 메뉴에서 진입 가능한 전체 기능 목록을 한 번에 보여주는 오버레이입니다. 화면별 HTML 엔트리와 메뉴 체계를 확인할 수 있습니다.
+
+![전체 메뉴 오버레이](./docs/image-3.png)
+
+#### 좌측 트리 메뉴 전개 상태
+
+좌측 LNB가 펼쳐진 상태의 코드관리 화면입니다. 공통 메뉴 모듈이 어떤 계층 구조로 화면을 묶는지 확인할 수 있습니다.
+
+![좌측 트리 메뉴 전개 상태](./docs/image-4.png)
+
+### 2. 조직, 일정, 운영 화면
+
+#### 일정 상세 팝업 `public/calendar.html`
+
+월간 일정 캘린더에서 특정 날짜의 업무를 수정하는 팝업 예시입니다. 날짜, 시간, 메모 입력 UI를 보여줍니다.
+
+![일정 상세 팝업](./docs/image-5.png)
+
+#### 조직도 구성 `public/orgni.html`
+
+드래그 가능한 카드형 조직도 화면입니다. 부서/팀 계층과 연결선을 시각적으로 조정하는 흐름을 보여줍니다.
+
+![조직도 구성](./docs/image-6.png)
+
+#### 컨설팅 지정 `public/network.html`
+
+고객 상담 내용을 입력하고 프로세스 상태를 Pending, Success, Fail, Risk 로 분류하는 운영 화면입니다.
+
+![컨설팅 지정](./docs/image-10.png)
+
+#### 프로젝트 일정 `public/trello.html`
+
+업무 리스트와 간트 타임라인을 좌우로 배치한 프로젝트 일정 화면입니다. 좌측 등록, 우측 일정 시각화 구조가 한 번에 보입니다.
+
+![프로젝트 일정](./docs/image-11.png)
+
+#### 행정구역 비교 `public/city.html`
+
+행정구역 데이터를 표로 조회하고, 두 지역의 상세 정보와 거리/교통 정보를 비교하는 화면입니다.
+
+![행정구역 비교](./docs/image-12.png)
+
+#### 근태관리 `public/attend.html`
+
+부서, 직원, 월 기준으로 출퇴근 기록을 가로 캘린더 형태로 보는 근태 관리 화면입니다.
+
+![근태관리](./docs/image-18.png)
+
+### 3. 관리 도구와 업무 편집 화면
+
+#### 권한관리 `public/orgtree.html`
+
+좌측 조직 트리에서 부서를 선택하고 우측에서 기능별 권한 체크박스를 설정하는 화면입니다.
+
+![권한관리](./docs/image-13.png)
+
+#### 설문지 구성 `public/survey.html`
+
+설문 문항 목록을 왼쪽에서 고르고, 오른쪽에서 설문 제목과 문항 배치를 구성하는 빌더 화면입니다.
+
+![설문지 구성](./docs/image-14.png)
+
+#### 설문 응답 결과 `public/survey.html`
+
+응답 결과를 차트로 시각화하고, 우측 패널에서 추천 카드까지 함께 보여주는 결과 화면입니다.
+
+![설문 응답 결과](./docs/image-15.png)
+
+#### KEG-EDITOR `public/kegeditor.html`
+
+좌우 AG Grid 이동과 하단 Toast UI Editor 를 결합한 편집 화면입니다. 코드 그룹 선택과 문서 편집을 한 화면에 모았습니다.
+
+![KEG-EDITOR](./docs/image-16.png)
+
+#### 사물함 관리 `public/locker.html`
+
+사물함 카드 그리드 위에 사용자 배정 모달이 열린 상태입니다. 사물함 상태와 사용자 매핑 흐름을 확인할 수 있습니다.
+
+![사물함 관리](./docs/image-17.png)
+
+#### 3D 박스 도안 `public/box.html`
+
+박스 크기와 색상을 조절하고 전개도를 동시에 확인하는 패키지 설계형 화면입니다.
+
+![3D 박스 도안](./docs/image-9.png)
+
+#### 블루마블 3D 화면 `public/burumable.html`
+
+3D 보드, 우측 상태 패널, 글로우 배경을 함께 사용하는 데모 게임 화면입니다.
+
+![블루마블 3D 화면](./docs/burumable-3d.png)
+
+### 4. 대시보드와 설치 흐름
+
+#### 시스템 로그 시각화 데모
+
+CPU, Memory, Disk, Network 추이를 24시간 차트로 보여주는 운영 대시보드 스타일의 화면입니다.
+
+![시스템 로그 시각화 데모](./docs/image-7.png)
+
+#### 대시보드형 통계 화면
+
+막대 차트, 파이 차트, 라인 차트를 한 화면에 배치한 분석형 대시보드 예시입니다.
+
+![대시보드형 통계 화면](./docs/image-8.png)
+
+#### PaaS Setup / AWS Cloud `public/config.html`
+
+AWS Cloud 선택 시 아키텍처, 부트스트랩 순서, 설치 항목, 생성 JSON 을 한 화면에서 보여주는 설치 콘솔 캡처입니다.
+
+![PaaS Setup AWS](./docs/paas-setup-aws.png)
+
+#### PaaS Setup / On Prem Kubernetes `public/config.html`
+
+On Prem Kubernetes 선택 시 ingress, namespace, replicas, 초기 매니페스트 목록까지 함께 보여주는 설치 콘솔 캡처입니다.
+
+![PaaS Setup On Prem Kubernetes](./docs/paas-setup-onprem-k8s.png)
+
+화면 캡처 자동화 스크립트: [scripts/capture-screens.js](./scripts/capture-screens.js)
+
+```bash
+docker run --rm --network host -v "$PWD":/work -w /work \
+  mcr.microsoft.com/playwright:v1.58.2-jammy \
+  sh -lc "mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null 2>&1 && npm install playwright-core@1.58.2 >/dev/null 2>&1 && PLAYWRIGHT_BROWSERS_PATH=/ms-playwright NODE_PATH=/tmp/pw/node_modules node /work/scripts/capture-screens.js"
+```
+
 ## 동영상 AI 판별 모듈
 
 `public/box.html`에 업로드형 동영상 AI 생성 판별 모듈을 추가했습니다.
@@ -440,158 +592,6 @@ sequenceDiagram
     Store-->>API: tasks by date
     API-->>UI: calendar payload
     UI-->>User: Updated month calendar
-```
-
-## DOCS 화면 갤러리
-
-아래 이미지는 모두 `DOCS/` 원본을 README 에 그대로 붙인 것입니다. 화면 성격이 비슷한 것끼리 묶어서 설명을 추가했습니다.
-
-### 1. 진입 화면과 공통 네비게이션
-
-#### 로그인 화면 `public/index.html`
-
-Admin, Manager, Guest 탭을 가진 기본 로그인 진입 화면입니다. 현재 데모 인증 흐름의 시작점입니다.
-
-![로그인 화면](./docs/image.png)
-
-#### 코드관리 기본 화면 `public/system.html`
-
-코드 그룹과 코드명을 테이블로 관리하는 대표 CRUD 화면입니다. 검색, 페이징, 저장 버튼 구성을 보여줍니다.
-
-![코드관리 기본 화면](./docs/image-1.png)
-
-#### 다국어 전환 예시
-
-같은 코드관리 화면을 일본어 라벨 기준으로 노출한 캡처입니다. 우하단 언어 선택 팝업까지 함께 보입니다.
-
-![다국어 전환 예시](./docs/image-2.png)
-
-#### 전체 메뉴 오버레이
-
-상단 메뉴에서 진입 가능한 전체 기능 목록을 한 번에 보여주는 오버레이입니다. 화면별 HTML 엔트리와 메뉴 체계를 확인할 수 있습니다.
-
-![전체 메뉴 오버레이](./docs/image-3.png)
-
-#### 좌측 트리 메뉴 전개 상태
-
-좌측 LNB가 펼쳐진 상태의 코드관리 화면입니다. 공통 메뉴 모듈이 어떤 계층 구조로 화면을 묶는지 확인할 수 있습니다.
-
-![좌측 트리 메뉴 전개 상태](./docs/image-4.png)
-
-### 2. 조직, 일정, 운영 화면
-
-#### 일정 상세 팝업 `public/calendar.html`
-
-월간 일정 캘린더에서 특정 날짜의 업무를 수정하는 팝업 예시입니다. 날짜, 시간, 메모 입력 UI를 보여줍니다.
-
-![일정 상세 팝업](./docs/image-5.png)
-
-#### 조직도 구성 `public/orgni.html`
-
-드래그 가능한 카드형 조직도 화면입니다. 부서/팀 계층과 연결선을 시각적으로 조정하는 흐름을 보여줍니다.
-
-![조직도 구성](./docs/image-6.png)
-
-#### 컨설팅 지정 `public/network.html`
-
-고객 상담 내용을 입력하고 프로세스 상태를 Pending, Success, Fail, Risk 로 분류하는 운영 화면입니다.
-
-![컨설팅 지정](./docs/image-10.png)
-
-#### 프로젝트 일정 `public/trello.html`
-
-업무 리스트와 간트 타임라인을 좌우로 배치한 프로젝트 일정 화면입니다. 좌측 등록, 우측 일정 시각화 구조가 한 번에 보입니다.
-
-![프로젝트 일정](./docs/image-11.png)
-
-#### 행정구역 비교 `public/city.html`
-
-행정구역 데이터를 표로 조회하고, 두 지역의 상세 정보와 거리/교통 정보를 비교하는 화면입니다.
-
-![행정구역 비교](./docs/image-12.png)
-
-#### 근태관리 `public/attend.html`
-
-부서, 직원, 월 기준으로 출퇴근 기록을 가로 캘린더 형태로 보는 근태 관리 화면입니다.
-
-![근태관리](./docs/image-18.png)
-
-### 3. 관리 도구와 업무 편집 화면
-
-#### 권한관리 `public/orgtree.html`
-
-좌측 조직 트리에서 부서를 선택하고 우측에서 기능별 권한 체크박스를 설정하는 화면입니다.
-
-![권한관리](./docs/image-13.png)
-
-#### 설문지 구성 `public/survey.html`
-
-설문 문항 목록을 왼쪽에서 고르고, 오른쪽에서 설문 제목과 문항 배치를 구성하는 빌더 화면입니다.
-
-![설문지 구성](./docs/image-14.png)
-
-#### 설문 응답 결과 `public/survey.html`
-
-응답 결과를 차트로 시각화하고, 우측 패널에서 추천 카드까지 함께 보여주는 결과 화면입니다.
-
-![설문 응답 결과](./docs/image-15.png)
-
-#### KEG-EDITOR `public/kegeditor.html`
-
-좌우 AG Grid 이동과 하단 Toast UI Editor 를 결합한 편집 화면입니다. 코드 그룹 선택과 문서 편집을 한 화면에 모았습니다.
-
-![KEG-EDITOR](./docs/image-16.png)
-
-#### 사물함 관리 `public/locker.html`
-
-사물함 카드 그리드 위에 사용자 배정 모달이 열린 상태입니다. 사물함 상태와 사용자 매핑 흐름을 확인할 수 있습니다.
-
-![사물함 관리](./docs/image-17.png)
-
-#### 3D 박스 도안 `public/box.html`
-
-박스 크기와 색상을 조절하고 전개도를 동시에 확인하는 패키지 설계형 화면입니다.
-
-![3D 박스 도안](./docs/image-9.png)
-
-#### 블루마블 3D 화면 `public/burumable.html`
-
-3D 보드, 우측 상태 패널, 글로우 배경을 함께 사용하는 데모 게임 화면입니다.
-
-![블루마블 3D 화면](./docs/burumable-3d.png)
-
-### 4. 대시보드와 설치 흐름
-
-#### 시스템 로그 시각화 데모
-
-CPU, Memory, Disk, Network 추이를 24시간 차트로 보여주는 운영 대시보드 스타일의 화면입니다.
-
-![시스템 로그 시각화 데모](./docs/image-7.png)
-
-#### 대시보드형 통계 화면
-
-막대 차트, 파이 차트, 라인 차트를 한 화면에 배치한 분석형 대시보드 예시입니다.
-
-![대시보드형 통계 화면](./docs/image-8.png)
-
-#### PaaS Setup / AWS Cloud `public/config.html`
-
-AWS Cloud 선택 시 아키텍처, 부트스트랩 순서, 설치 항목, 생성 JSON 을 한 화면에서 보여주는 설치 콘솔 캡처입니다.
-
-![PaaS Setup AWS](./docs/paas-setup-aws.png)
-
-#### PaaS Setup / On Prem Kubernetes `public/config.html`
-
-On Prem Kubernetes 선택 시 ingress, namespace, replicas, 초기 매니페스트 목록까지 함께 보여주는 설치 콘솔 캡처입니다.
-
-![PaaS Setup On Prem Kubernetes](./docs/paas-setup-onprem-k8s.png)
-
-화면 캡처 자동화 스크립트: [scripts/capture-screens.js](./scripts/capture-screens.js)
-
-```bash
-docker run --rm --network host -v "$PWD":/work -w /work \
-  mcr.microsoft.com/playwright:v1.58.2-jammy \
-  sh -lc "mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null 2>&1 && npm install playwright-core@1.58.2 >/dev/null 2>&1 && PLAYWRIGHT_BROWSERS_PATH=/ms-playwright NODE_PATH=/tmp/pw/node_modules node /work/scripts/capture-screens.js"
 ```
 
 ## AWS Cloud 순차 실행
