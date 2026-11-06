@@ -1,9 +1,9 @@
-@import url('../vendor/tui-pagination/dist/tui-pagination.css');
-@import url('../vendor/tui-grid/dist/tui-grid.css');
-@import url('../vendor/tailwind/css/tailwind.min.css');
-@import url('../vendor/fontawesome-free-5.15.4-web/css/all.css');
-@import url('../vendor/pikaday/css/pikaday.css');
-@import url('../vendor/pretendard/dist/web/variable/pretendardvariable.css');
+@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+@import url('https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.css');
+@import url('https://uicdn.toast.com/tui-grid/latest/tui-grid.css');
+@import url('https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
 
 :root {
   --text-color: #ffffff;

@@ -1,24 +1,66 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/default.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>실적·이벤트 일정 - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .day-header {
+      padding: 10px 0;
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.82rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .calendar-header button {
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      background: #0058a3;
+      color: #fff;
+      transition: background 0.15s;
+    }
+    .calendar-header button:hover {
+      background: #004580;
+    }
+    .calendar-cell {
+      min-height: 90px;
+      border: 1px solid #f1f5f9;
+      padding: 6px;
+      text-align: left;
+      font-size: 0.8rem;
+      position: relative;
+      background: #fff;
+    }
+    .calendar-cell:hover {
+      background: #fafafa;
+    }
+    .event-badge {
+      background: #ebf4ff;
+      color: #1e40af;
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">실적·이벤트 일정</nav>
 
-    <nav class="breadcrumb"></nav>
+  <div id="content">
+    <div id="calendar"></div>
+  </div>
 
-    <div id="content">
-        <div id="calendar"></div>
-    </div>
-
-
-    <script type="module" src="assets/js/logomodule.js"></script>
-    <script type="module" src="assets/js/calendar.js"></script>
-
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/calendar.js"></script>
 </body>
-
 </html>

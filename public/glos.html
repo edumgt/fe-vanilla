@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/default.css" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>투자 용어사전 - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+  <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css" />
+  <style>
+    .search-input {
+      height: 32px;
+      font-size: 0.8rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      padding: 4px 8px;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: #0058a3;
+    }
+  </style>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">투자 용어사전</nav>
 
-    <nav class="breadcrumb"></nav>
-
-    <div id="content">
-
-
-        <div class="flex flex-col lg:flex-row justify-between items-center py-2">
-            <div id="dataCount" class="text-sm text-gray-700 mb-2 lg:mb-0">Total :</div>
-            <div class="flex flex2 flex-col lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2">
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="en" placeholder="영어단어">
-                    <input type="text" id="ko" placeholder="한글단어">
-                    <input type="text" id="desc" placeholder="설명">
-                    <div class="relative">
-                        <input type="text" id="datePicker" class=" rounded p-2 pl-10">
-                        <i
-                            class="fas fa-calendar-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <div id="btnContainer"></div>
-                </div>
-            </div>
+  <div id="content">
+    <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
+      <div id="dataCount" class="text-sm font-bold text-gray-700">Total : 0</div>
+      
+      <div class="flex flex-wrap items-center gap-2">
+        <input type="text" id="en" placeholder="영문단어" class="search-input" style="width: 140px;" />
+        <input type="text" id="ko" placeholder="한글명" class="search-input" style="width: 140px;" />
+        <input type="text" id="desc" placeholder="설명" class="search-input" style="width: 160px;" />
+        <div class="relative inline-flex items-center">
+          <input type="text" id="datePicker" placeholder="YYYY-MM-DD" class="search-input" style="width: 120px;" />
+          <i class="far fa-calendar-alt absolute right-2 text-gray-400 pointer-events-none text-xs"></i>
         </div>
 
-        <div id="grid"></div>
+        <div id="btnContainer" class="flex items-center"></div>
+      </div>
     </div>
 
-    <script type="module" src="assets/vendor/tui-pagination/dist/tui-pagination.js"></script>
-    <script type="module" src="assets/vendor/tui-grid/dist/tui-grid.js"></script>
-    <script type="text/javascript" src="assets/vendor/pikaday/pikaday.js"></script>
+    <!-- TUI Grid -->
+    <div id="grid"></div>
+  </div>
 
-    <script type="module" src="assets/js/logomodule.js"></script>
-
-    <script type="module" src="assets/js/gloscrud.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+  <script src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.min.js"></script>
+  <script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+  <script>
+    window.btnContainer = document.getElementById('btnContainer');
+  </script>
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/gloscrud.js"></script>
 </body>
-
 </html>

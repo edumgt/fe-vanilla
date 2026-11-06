@@ -1,120 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="assets/css/default.css">
-    <link rel="stylesheet" href="assets/css/login.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 기반 관리자 모드 SaaS, PaaS</title>
+  <meta name="description" content="정적 HTML/Vanilla JS 화면과 Express 기반 API 서버를 운영하는 AI 기반 관리자 SaaS/PaaS 플랫폼" />
+  <meta property="og:title" content="AI 기반 관리자 모드 SaaS, PaaS" />
+  <meta property="og:description" content="정적 HTML/Vanilla JS 화면과 Express 기반 API 서버를 운영하는 AI 기반 관리자 SaaS/PaaS 플랫폼" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/default.css" />
+  <link rel="stylesheet" href="assets/css/login.css" />
+  
+  <style>
+    body {
+      background-image: url('assets/img/bg.jpg') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-attachment: fixed !important;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .auth-card {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 410px;
+      padding: 38px 34px 30px 34px;
+      position: relative;
+      z-index: 10;
+    }
+    .tab-button {
+      padding: 6px 18px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .tab-active {
+      background: #0056b3 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(0, 86, 179, 0.35);
+      transform: none !important;
+    }
+    .tab-inactive {
+      background: #8a8a8a !important;
+      color: #ffffff !important;
+    }
+    .form-control {
+      display: block;
+      width: 100%;
+      height: 38px;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      color: #333333;
+      background-color: #ffffff;
+      border: 1.5px solid #0058a3;
+      border-radius: 4px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .form-control:focus {
+      border-color: #003666;
+      box-shadow: 0 0 0 2px rgba(0, 88, 163, 0.2);
+    }
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #4a5568;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .btn-login {
+      background-color: #0058a3;
+      color: #ffffff;
+      padding: 6px 20px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      transition: background-color 0.15s ease;
+    }
+    .btn-login:hover {
+      background-color: #00407a;
+    }
+    .quick-links-panel {
+      margin-top: 24px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 8px;
+      padding: 12px 16px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+  </style>
 </head>
-
-<body class="bg-gray-100 bg-opacity-90">
-    <div class="flex items-center justify-center h-screen">
-        <div class="bg-white p-8 rounded-lg  max-w-md w-full">
-            <div class="text-center mb-6">
-                <a href="#" class="inline-flex items-center space-x-2">
-                    <img src="assets/img/flask-logo.png" alt="Logo" class="w-12 h-12">
-                    <h5 class="text-2xl font-semibold text-gray-800">EDUMGT</h5>
-                </a>
-            </div>
-            <div class="mb-6 text-center">
-                <h5 class="text-xl  text-gray-700">Welcome to EDUMGT Demo</h5>
-                <p class="text-gray-500">데모사용을 위해 로그인 해주세요</p>
-            </div>
-            <div class="mb-6">
-                <ul class="flex justify-center space-x-4 mb-4">
-                    <li><button id="admin-tab" class="tab-button tab-active">Admin</button></li>
-                    <li><button id="manager-tab" class="tab-button tab-inactive">Manager</button></li>
-                    <li><button id="guest-tab" class="tab-button tab-inactive">Guest</button></li>
-                </ul>
-            </div>
-            <div id="admin-form" class="tab-content">
-                <form action="/login" method="post" class="space-y-4" id="loginForm">
-                    <div>
-                        <label for="admin-login-id" class="block text-sm  text-gray-700 mb-1">Admin Login
-                            ID</label>
-                        <input id="admin-login-id" type="text" name="username"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Admin Login ID">
-                    </div>
-                    <div>
-                        <label for="admin-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="admin-password" type="password" name="password"
-                            class="w-full rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="admin-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="admin-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        
-                         <button type="button" id="loginButton" class="btn btn-primary w-100 py-2">login</button>
-                    </div>
-                </form>
-            </div>
-            <div id="manager-form" class="hidden tab-content">
-                <form action="#" method="post" class="space-y-4">
-                    <div>
-                        <label for="manager-login-id" class="block text-sm  text-gray-700 mb-1">Manager Login
-                            ID</label>
-                        <input id="manager-login-id" type="text" name="login-id"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Manager Login ID">
-                    </div>
-                    <div>
-                        <label for="manager-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="manager-password" type="password" name="password"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="manager-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="manager-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        <a href="#" class="btn btn-primary w-100">Login</a>
-                    </div>
-                </form>
-            </div>
-            <div id="guest-form" class="hidden tab-content">
-                <form action="#" method="post" class="space-y-4">
-                    <div>
-                        <label for="guest-login-id" class="block text-sm  text-gray-700 mb-1">Guest Login
-                            ID</label>
-                        <input id="guest-login-id" type="text" name="login-id"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Guest Login ID">
-                    </div>
-                    <div>
-                        <label for="guest-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="guest-password" type="password" name="password"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="guest-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="guest-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        <a href="#" class="btn btn-primary w-100">Login</a>
-                    </div>
-                </form>
-            </div>
-            <div class="mt-6 flex justify-between text-sm">
-                <a href="register.html" class="text-blue-600 hover:underline">Register</a>
-                <a href="#" class="text-blue-600 hover:underline">Forgot Password?</a>
-            </div>
-        </div>
+<body>
+  <!-- Authentic Login Card from docs/image.png -->
+  <div class="auth-card">
+    <!-- Brand Logo -->
+    <div class="flex items-center justify-center gap-2 mb-3">
+      <div class="w-8 h-8 rounded bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shadow-sm" style="background:#5a67d8;">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+      </div>
+      <span class="text-xl font-bold tracking-tight text-gray-900">EDUMGT</span>
     </div>
-    <script type="text/javascript" src="assets/js/login.js"></script>
-</body>
 
+    <!-- Title & Subtitle -->
+    <h2 class="text-base font-semibold text-gray-800 text-center">Welcome to EDUMGT Demo</h2>
+    <p class="text-xs text-gray-400 text-center mt-1 mb-5">데모사용을 위해 로그인 해주세요</p>
+
+    <!-- Role Tabs -->
+    <div class="flex justify-center gap-2 mb-5">
+      <button id="admin-tab" type="button" class="tab-button tab-active">Admin</button>
+      <button id="manager-tab" type="button" class="tab-button tab-inactive">Manager</button>
+      <button id="guest-tab" type="button" class="tab-button tab-inactive">Guest</button>
+    </div>
+
+    <!-- Form -->
+    <form id="loginForm">
+      <!-- Admin Tab Content -->
+      <div id="admin-form" class="tab-content">
+        <div class="mb-3">
+          <label class="form-label" for="admin-login-id">Admin Login ID</label>
+          <input type="text" id="admin-login-id" name="username" value="admin" class="form-control" autocomplete="username" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="admin-password">Password</label>
+          <input type="password" id="admin-password" name="password" value="1111" class="form-control" autocomplete="current-password" />
+        </div>
+      </div>
+
+      <!-- Manager Tab Content -->
+      <div id="manager-form" class="tab-content hidden">
+        <div class="mb-3">
+          <label class="form-label" for="mgr-login-id">Manager Login ID</label>
+          <input type="text" id="mgr-login-id" name="username" value="manager" class="form-control" disabled autocomplete="username" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="mgr-password">Password</label>
+          <input type="password" id="mgr-password" name="password" value="1111" class="form-control" disabled autocomplete="current-password" />
+        </div>
+      </div>
+
+      <!-- Guest Tab Content -->
+      <div id="guest-form" class="tab-content hidden">
+        <div class="mb-3">
+          <label class="form-label" for="guest-login-id">Guest Login ID</label>
+          <input type="text" id="guest-login-id" name="username" value="guest" class="form-control" disabled autocomplete="username" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="guest-password">Password</label>
+          <input type="password" id="guest-password" name="password" value="1111" class="form-control" disabled autocomplete="current-password" />
+        </div>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="flex items-center mb-4">
+        <input type="checkbox" id="rememberMe" class="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" checked />
+        <label for="rememberMe" class="text-xs text-gray-600 cursor-pointer select-none">Remember Me</label>
+      </div>
+
+      <!-- Login Button -->
+      <div class="mb-5">
+        <button type="button" id="loginButton" class="btn-login">login</button>
+      </div>
+
+      <!-- Register & Forgot Password -->
+      <div class="flex justify-between items-center text-xs text-blue-600 pt-1">
+        <a href="#" onclick="alert('데모 계정(admin/1111, manager/1111, guest/1111)을 사용하세요.'); return false;" class="hover:underline">Register</a>
+        <a href="#" onclick="alert('데모 비밀번호는 1111 입니다.'); return false;" class="hover:underline">Forgot Password?</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Quick Screen Navigation for seamless browsing -->
+  <div class="quick-links-panel">
+    <div class="flex items-center justify-between mb-2 pb-1 border-b">
+      <span class="text-xs font-bold text-gray-700"><i class="fas fa-th mr-1 text-blue-600"></i> 전체 화면 바로가기 (Direct Links)</span>
+      <span class="text-[11px] text-gray-500">클릭 시 각 데모 화면으로 이동</span>
+    </div>
+    <div class="flex flex-wrap gap-2 text-xs">
+      <a href="aistock.html" class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded font-medium transition">
+        <i class="fas fa-chart-line mr-1"></i> AI기업정보 (aistock.html)
+      </a>
+      <a href="system.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-database mr-1"></i> 코드관리 (system.html)
+      </a>
+      <a href="1.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-calendar-alt mr-1"></i> 강의시간표 (1.html)
+      </a>
+      <a href="2.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-graduation-cap mr-1"></i> 수강신청견적 (2.html)
+      </a>
+      <a href="4.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-table mr-1"></i> DB Admin (4.html)
+      </a>
+      <a href="5.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-code mr-1"></i> API 콘솔 (5.html)
+      </a>
+      <a href="account-pop.html" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded font-medium transition">
+        <i class="fas fa-user mr-1"></i> 회원정보 (account-pop.html)
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const tabButtons = document.querySelectorAll('button[id$="-tab"]');
+    const tabForms = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => {
+          b.classList.remove('tab-active');
+          b.classList.add('tab-inactive');
+        });
+        btn.classList.remove('tab-inactive');
+        btn.classList.add('tab-active');
+
+        tabForms.forEach(f => {
+          f.classList.add('hidden');
+          f.querySelectorAll('input').forEach(inp => inp.disabled = true);
+        });
+
+        const activeTarget = document.getElementById(btn.id.replace('-tab', '-form'));
+        if (activeTarget) {
+          activeTarget.classList.remove('hidden');
+          activeTarget.querySelectorAll('input').forEach(inp => inp.disabled = false);
+        }
+      });
+    });
+
+    if (!localStorage.getItem('favorite-1st')) {
+      localStorage.setItem('favorite-1st', JSON.stringify({ title: 'AI기업정보', url: 'aistock.html' }));
+    }
+  </script>
+  <script src="assets/js/login.js"></script>
+</body>
 </html>

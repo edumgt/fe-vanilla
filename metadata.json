@@ -1,0 +1,8 @@
+{
+  "name": "AI 기반 관리자 모드 SaaS, PaaS",
+  "description": "정적 HTML/Vanilla JS 화면과 Express 기반 API 서버를 운영하는 AI 기반 관리자 SaaS/PaaS 플랫폼",
+  "version": "1.0.0",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

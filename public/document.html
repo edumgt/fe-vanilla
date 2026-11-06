@@ -1,114 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-  <meta charset="UTF-8">
-  <title>텍스트 탐지</title>
-  <link href="assets/css/default.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>뉴스 문서분석 - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
-<body class="bg-gray-50 w-full h-full">
+<body>
   <div id="cmmContainer"></div>
+  <nav class="breadcrumb">뉴스 문서분석</nav>
 
-  <div id="content" class="ml-[110px] pt-24 px-10">
-    <nav class="breadcrumb">동영상 분석</nav>
-
-    <div>&nbsp;</div>
-
-    <!-- 파일 업로드 -->
-    <div id="uploadBox"
-      class="border-2 border-dashed border-gray-400 rounded-lg p-10 text-center text-gray-500 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
-      📄 Drag & Drop 또는 클릭하여 텍스트 파일 업로드 (.txt)
-      <input type="file" id="fileInput" accept=".txt" hidden />
-    </div>
-
-    <!-- 탐지 결과 -->
-    <div id="resultArea" class="mt-8 hidden">
-      <!-- AI 생성 의심 문장 하이라이트 -->
-      <h2 class="text-lg font-semibold mb-2">탐지 결과</h2>
-      <div id="highlightedText" class="whitespace-pre-wrap border p-4 rounded bg-white shadow"></div>
-
-      <!-- 판별 근거 및 비교 -->
-      <div class="mt-6">
-        <h3 class="font-semibold mb-2">판별 근거 / 비교</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="p-4 border rounded bg-white shadow">
-            <h4 class="font-semibold text-gray-700 mb-2">원본 문장</h4>
-            <div id="originalText" class="text-sm text-gray-800"></div>
-          </div>
-          <div class="p-4 border rounded bg-white shadow">
-            <h4 class="font-semibold text-gray-700 mb-2">AI 생성 의심 부분</h4>
-            <div id="aiText" class="text-sm text-red-600"></div>
-          </div>
+  <div id="content">
+    <div id="workarea" class="flex gap-4" style="height: calc(100vh - 120px);">
+      <!-- 문서 리스트 사이드바 -->
+      <div class="w-80 bg-white rounded-xl shadow-sm border p-4 flex flex-col">
+        <div class="flex justify-between items-center pb-3 border-b">
+          <h3 class="text-sm font-bold text-gray-700"><i class="fas fa-file-alt mr-2 text-blue-600"></i>문서 목록</h3>
         </div>
+        <div id="document-list" class="flex-1 overflow-y-auto mt-2 space-y-1"></div>
+        <div id="btn-area"></div>
       </div>
 
-      <!-- 요약 -->
-      <div class="mt-6">
-        <h3 class="font-semibold mb-2">전체 내용 요약</h3>
-        <div id="summaryBox" class="p-4 border rounded bg-white shadow text-sm text-gray-700"></div>
+      <!-- 뷰어 영역 -->
+      <div id="viewer" class="flex-1 bg-white rounded-xl shadow-sm border p-6 flex items-center justify-center">
+        <div class="text-gray-400 text-sm">목록에서 문서를 선택하세요.</div>
       </div>
     </div>
   </div>
 
+  <!-- 신규 문서 모달 -->
+  <div id="new-document-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-96">
+      <h4 class="text-base font-bold text-gray-800 mb-4">문서 업로드</h4>
+      <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500">
+        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+        <p class="text-xs text-gray-500">파일을 드래그하거나 클릭하여 업로드</p>
+        <input type="file" id="file-input" class="hidden" />
+      </div>
+      <div id="progress-bar" class="hidden mt-4 w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+      </div>
+      <div id="closeBtn"></div>
+    </div>
+  </div>
+
   <script type="module" src="assets/js/logomodule.js"></script>
-
-  <script>
-    const fileInput = document.getElementById("fileInput");
-    const uploadBox = document.getElementById("uploadBox");
-    const resultArea = document.getElementById("resultArea");
-    const highlightedText = document.getElementById("highlightedText");
-    const originalText = document.getElementById("originalText");
-    const aiText = document.getElementById("aiText");
-    const summaryBox = document.getElementById("summaryBox");
-
-    // 업로드 이벤트
-    uploadBox.addEventListener("click", () => fileInput.click());
-    uploadBox.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      uploadBox.classList.add("bg-blue-50", "border-blue-500");
-    });
-    uploadBox.addEventListener("dragleave", () => {
-      uploadBox.classList.remove("bg-blue-50", "border-blue-500");
-    });
-    uploadBox.addEventListener("drop", (e) => {
-      e.preventDefault();
-      uploadBox.classList.remove("bg-blue-50", "border-blue-500");
-      handleFile(e.dataTransfer.files[0]);
-    });
-    fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
-
-    // 파일 처리 함수
-    function handleFile(file) {
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-
-        // 🔹 실제로는 서버로 보내고 AI 탐지 결과를 받아와야 함
-        // 여기서는 Mock 데이터 생성
-        const suspiciousSentence = "이 문장은 AI가 생성했을 가능성이 높습니다.";
-        const summary = "이 텍스트는 AI와 사람이 혼합하여 작성한 것으로 보이며, 특정 부분에서 반복적이고 부자연스러운 표현이 탐지되었습니다.";
-
-        // 결과 영역 표시
-        resultArea.classList.remove("hidden");
-
-        // 원문 전체 + 하이라이트 표시
-        highlightedText.innerHTML = text.replace(
-          suspiciousSentence,
-          `<mark class="bg-red-200">${suspiciousSentence}</mark>`
-        );
-
-        // 비교 BOX
-        originalText.textContent = text;
-        aiText.textContent = suspiciousSentence;
-
-        // 요약
-        summaryBox.textContent = summary;
-      };
-      reader.readAsText(file);
-    }
-  </script>
+  <script type="module" src="assets/js/document.js"></script>
 </body>
 </html>

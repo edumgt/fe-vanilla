@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/timeline.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이벤트 타임라인 - EDUMGT</title>
+  <link href="assets/css/timeline.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div id="cmmContainer"></div>
-    <nav class="breadcrumb"></nav>
-    <div id="content">
-        
-        <div id="workarea">
-            <div class="carousel-btn" id="prev-btn">&lt; Prev 5 days</div>
-            <div id="current-date" class="text-center text-md font-bold">Today</div>
-            <div class="carousel-btn" id="next-btn">Next 5 days &gt;</div>
-        </div>
-        <div class="timeline-header" id="timeline-header"></div>
-        <div class="timeline" id="timeline-content"></div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">이벤트 타임라인</nav>
+
+  <div id="content">
+    <div id="workarea" class="flex justify-between items-center mb-4">
+      <div class="text-sm font-bold text-gray-700">타임라인 네비게이션</div>
+      <div>
+        <button id="prev-btn" class="carousel-btn"><i class="fas fa-chevron-left mr-1"></i>이전 5일</button>
+        <button id="next-btn" class="carousel-btn">다음 5일<i class="fas fa-chevron-right ml-1"></i></button>
+      </div>
     </div>
-    <script type="module" src="assets/js/logomodule.js"></script>
-    
-    <script type="module" src="assets/vendor/interactjs/dist/interact.min.js"></script>
-    <script type="module" src="assets/js/timeline.js"></script>
+
+    <div class="bg-white rounded-xl shadow-sm border p-4">
+      <div id="timeline-header" class="timeline-header"></div>
+      <div id="timeline-content" class="timeline"></div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/timeline.js"></script>
 </body>
 </html>

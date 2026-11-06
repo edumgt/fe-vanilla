@@ -1,42 +1,36 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/flow.css" rel="stylesheet">
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>매출·재무분석 - EDUMGT</title>
+  <link href="assets/css/flow.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
-    <nav class="breadcrumb"></nav>
-    <div id="content">
-       
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">매출·재무분석</nav>
 
-
-        <div class="grid-container mt-4 mb-4">
-            <h2>항목별 데이터</h2>
-            <div id="hot1"></div>
-        </div>
-        <div class="grid-container mb-4">
-            <h2>합계</h2>
-            <div id="hot2"></div>
-        </div>
-        <div class="grid-container mb-4">
-            <h2>합계 추이</h2>
-            <div id="chart"></div>
-        </div>
-
+  <div id="content" class="space-y-6">
+    <div class="bg-white p-4 rounded-xl shadow-sm border">
+      <h3 class="text-sm font-bold text-gray-700 mb-3"><i class="fas fa-table mr-2 text-blue-600"></i>월별 매출 및 재무 항목 스프레드시트</h3>
+      <div id="hot1" class="overflow-hidden"></div>
+      <div class="mt-4">
+        <h4 class="text-xs font-semibold text-gray-500 mb-1">월별 합계</h4>
+        <div id="hot2" class="overflow-hidden"></div>
+      </div>
     </div>
 
+    <div class="bg-white p-4 rounded-xl shadow-sm border">
+      <h3 class="text-sm font-bold text-gray-700 mb-3"><i class="fas fa-chart-line mr-2 text-blue-600"></i>월별 매출 추이 차트</h3>
+      <div id="chart"></div>
+    </div>
+  </div>
 
-    <script src="assets/vendor/handsontable/dist/handsontable.full.js"></script>
-    <script type="module" src="assets/vendor/apexcharts/dist/apexcharts.js"></script>
-    <script type="module" src="assets/js/logomodule.js"></script>
-    
-    <script type="module" src="assets/js/flow.js"></script>
-    
-
+  <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script src="assets/js/flow.js"></script>
 </body>
-
 </html>

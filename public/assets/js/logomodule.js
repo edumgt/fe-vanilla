@@ -2,21 +2,23 @@ import { buildApiUrl, createTanslations } from './common.js';
 const translations = createTanslations;
 
 export const cmmContainer = document.getElementById('cmmContainer');
-cmmContainer.innerHTML = `
-    <div class="gnb-menu">
-        <ul class="flex">
-            <div id="logo"></div>
-            <div id="tabs-container"></div>
-            <div id="dropdown-container"></div>
-            <div id="memberIcon"></div>
-            <div id="memberMenu"></div>
-        </ul>
-    </div>
-    <div id="toast-container"></div>
-    <div id="offCanvasContainer"></div>
-    <div id="buttonContainer"></div>
-    <div id="appContainer"></div>
-`;
+if (cmmContainer) {
+    cmmContainer.innerHTML = `
+        <div class="gnb-menu">
+            <ul class="flex">
+                <div id="logo"></div>
+                <div id="tabs-container"></div>
+                <div id="dropdown-container"></div>
+                <div id="memberIcon"></div>
+                <div id="memberMenu"></div>
+            </ul>
+        </div>
+        <div id="toast-container"></div>
+        <div id="offCanvasContainer"></div>
+        <div id="buttonContainer"></div>
+        <div id="appContainer"></div>
+    `;
+}
 
 
 export const currentPage = window.location.pathname.split("/").pop();
@@ -225,31 +227,39 @@ function renderOffCanvasMenu(menuItems) {
     flexContainer.appendChild(buttonsContainer);
     offCanvas.appendChild(flexContainer);
 
-    document.getElementById('offCanvasContainer').appendChild(offCanvas);
+    const offCanvasContainer = document.getElementById('offCanvasContainer');
+    if (offCanvasContainer) {
+        offCanvasContainer.appendChild(offCanvas);
+    }
 }
 
 
 const iconMapping = {
-    "AI·시장분석":   "fa-microchip",
-    "AI기업정보":    "fa-robot",
-    "CEO 다이어리":  "fa-user-tie",
-    "일정·이벤트":   "fa-calendar-alt",
+    "일반 업무":      "fa-building",
+    "AI 용 업무":     "fa-brain",
+    "게임 FE":        "fa-dice-d20",
+    "포털 허브":      "fa-home",
+    "AI·시장분석":    "fa-microchip",
+    "AI기업정보":     "fa-robot",
+    "AI 영상판별":    "fa-film",
+    "CEO 다이어리":   "fa-user-tie",
+    "일정·이벤트":    "fa-calendar-alt",
     "실적·이벤트 일정": "fa-calendar-check",
-    "이벤트 타임라인":  "fa-stream",
-    "리서치 태스크":    "fa-tasks",
-    "재무·통계":     "fa-chart-line",
-    "매출·재무분석":    "fa-chart-bar",
-    "시장통계":         "fa-chart-area",
-    "섹터·공급망":      "fa-link",
-    "투자정보":      "fa-book-open",
-    "투자 용어사전":    "fa-book",
-    "뉴스 문서분석":    "fa-file-alt",
-    "데이터관리":    "fa-database",
-    "종목 코드 관리":   "fa-server",
-    "권한관리":         "fa-user-shield",
-    "설정관리":      "fa-cogs",
+    "이벤트 타임라인": "fa-stream",
+    "리서치 태스크":  "fa-tasks",
+    "재무·통계":      "fa-chart-line",
+    "매출·재무분석":  "fa-chart-bar",
+    "시장통계":       "fa-chart-area",
+    "섹터·공급망":    "fa-link",
+    "투자정보":       "fa-book-open",
+    "투자 용어사전":  "fa-book",
+    "뉴스 문서분석":  "fa-file-alt",
+    "데이터관리":     "fa-database",
+    "종목 코드 관리": "fa-server",
+    "권한관리":       "fa-user-shield",
+    "설정관리":       "fa-cogs",
+    "부루마블 3D":    "fa-dice",
 };
-
 
 const storedData = localStorage.getItem('menuConfigurations');
 let menuConfigurations = storedData ? JSON.parse(storedData) : {};
@@ -267,55 +277,49 @@ fetch(buildApiUrl('/api/menu'))
 
 const defaultMenuItems = [
     {
-        id: "101",
-        text: 'AI·시장분석',
-        icon: 'fa-microchip',
-        href: 'aistock.html',
-        children: [
-            { id: "1011", text: 'AI기업정보',   href: 'aistock.html',   icon: 'fa-robot'    },
-            { id: "1012", text: 'CEO 다이어리', href: 'ceo-diary.html', icon: 'fa-user-tie' }
-        ]
-    },
-    {
-        id: "102",
-        text: '일정·이벤트',
-        icon: 'fa-calendar-alt',
-        href: 'calendar.html',
-        children: [
-            { id: "1021", text: '실적·이벤트 일정', href: 'calendar.html', icon: 'fa-calendar-check' },
-            { id: "1022", text: '이벤트 타임라인',  href: 'timeline.html', icon: 'fa-stream'         },
-            { id: "1023", text: '리서치 태스크',     href: 'trello.html',   icon: 'fa-tasks'          }
-        ]
-    },
-    {
-        id: "103",
-        text: '재무·통계',
-        icon: 'fa-chart-line',
-        href: 'flow.html',
-        children: [
-            { id: "1031", text: '매출·재무분석', href: 'flow.html',  icon: 'fa-chart-bar'  },
-            { id: "1032", text: '시장통계',      href: 'stati.html', icon: 'fa-chart-area' },
-            { id: "1033", text: '섹터·공급망',   href: 'chain.html', icon: 'fa-link'       }
-        ]
-    },
-    {
-        id: "104",
-        text: '투자정보',
-        icon: 'fa-book-open',
-        href: 'glos.html',
-        children: [
-            { id: "1041", text: '투자 용어사전', href: 'glos.html',     icon: 'fa-book'     },
-            { id: "1042", text: '뉴스 문서분석', href: 'document.html', icon: 'fa-file-alt' }
-        ]
-    },
-    {
-        id: "105",
-        text: '데이터관리',
-        icon: 'fa-database',
+        id: "p1",
+        text: '일반 업무',
+        icon: 'fa-building',
         href: 'system.html',
         children: [
-            { id: "1051", text: '종목 코드 관리', href: 'system.html',  icon: 'fa-server'      },
-            { id: "1052", text: '권한관리',        href: 'orgtree.html', icon: 'fa-user-shield' }
+            { id: "p11", text: '종목 코드 관리', href: 'system.html',   icon: 'fa-server' },
+            { id: "p12", text: '실적·이벤트 일정', href: 'calendar.html', icon: 'fa-calendar-check' },
+            { id: "p13", text: '매출·재무분석',  href: 'flow.html',     icon: 'fa-chart-bar' },
+            { id: "p14", text: '리서치 태스크',   href: 'trello.html',   icon: 'fa-tasks' },
+            { id: "p15", text: '시장통계',       href: 'stati.html',    icon: 'fa-chart-area' },
+            { id: "p16", text: '권한관리',       href: 'orgtree.html',  icon: 'fa-user-shield' }
+        ]
+    },
+    {
+        id: "p2",
+        text: 'AI 용 업무',
+        icon: 'fa-brain',
+        href: 'aistock.html',
+        children: [
+            { id: "p21", text: 'AI기업정보',    href: 'aistock.html',  icon: 'fa-robot' },
+            { id: "p22", text: 'AI 영상판별',    href: 'video-ai.html', icon: 'fa-film' },
+            { id: "p23", text: 'CEO 다이어리',  href: 'ceo-diary.html',icon: 'fa-user-tie' },
+            { id: "p24", text: '뉴스 문서분석',  href: 'document.html', icon: 'fa-file-alt' },
+            { id: "p25", text: '투자 용어사전',  href: 'glos.html',     icon: 'fa-book' },
+            { id: "p26", text: '섹터·공급망',   href: 'chain.html',    icon: 'fa-link' }
+        ]
+    },
+    {
+        id: "p3",
+        text: '게임 FE',
+        icon: 'fa-dice-d20',
+        href: 'burumable.html',
+        children: [
+            { id: "p31", text: '부루마블 3D',    href: 'burumable.html', icon: 'fa-dice' }
+        ]
+    },
+    {
+        id: "p0",
+        text: '포털 허브',
+        icon: 'fa-home',
+        href: 'index.html',
+        children: [
+            { id: "p01", text: '인트로 허브',    href: 'index.html',     icon: 'fa-home' }
         ]
     }
 ];
@@ -436,19 +440,21 @@ function renderFloatingNav(containerId) {
     });
 }
 
-renderFloatingNav('appContainer');
+if (document.getElementById('appContainer')) {
+    renderFloatingNav('appContainer');
+}
 
 const tabsData = [
-    { href: "aistock.html",  icon: "fas fa-microchip",    label: "AI·시장분석" },
-    { href: "calendar.html", icon: "fas fa-calendar-alt", label: "일정·이벤트" },
-    { href: "flow.html",     icon: "fas fa-chart-line",   label: "재무·통계"   },
-    { href: "glos.html",     icon: "fas fa-book-open",    label: "투자정보"    },
-    { href: "system.html",   icon: "fas fa-database",     label: "데이터관리"  },
-    { href: "orgtree.html",  icon: "fas fa-shield-alt",   label: "설정관리"    },
+    { href: "index.html",     icon: "fas fa-home",       label: "포털 허브" },
+    { href: "system.html",    icon: "fas fa-building",   label: "일반 업무" },
+    { href: "aistock.html",   icon: "fas fa-brain",      label: "AI 용 업무" },
+    { href: "video-ai.html",  icon: "fas fa-film",       label: "AI 영상판별" },
+    { href: "burumable.html", icon: "fas fa-dice-d20",   label: "게임 FE" },
 ];
 
 function renderTabs(containerId) {
     const container = document.getElementById(containerId);
+    if (!container) return;
     const tabsDiv = document.createElement("div");
     tabsDiv.className = "px-8 tabs flex";
 
@@ -481,10 +487,13 @@ class AppBrand {
         this.container = document.getElementById(containerId);
         this.brandName = brandName;
         this.logoHref = logoHref;
-        this.render();
+        if (this.container) {
+            this.render();
+        }
     }
 
     render() {
+        if (!this.container) return;
         this.container.innerHTML = `
                 <a href="${this.logoHref}">
                     <span class="logo-text">${this.brandName}</span>
@@ -502,42 +511,52 @@ button.className = 'fixed bottom-4 right-4 bg-black text-white rounded-3xl p-2 z
 const icon = document.createElement('i');
 icon.className = 'fas fa-globe';
 button.appendChild(icon);
-document.getElementById('buttonContainer').appendChild(button);
-document.getElementById('gearIcon').addEventListener('click', () => {
-    const floatingNav = document.getElementById('floatingNav');
-    floatingNav.classList.remove('hidden');
-});
+const buttonContainer = document.getElementById('buttonContainer');
+if (buttonContainer) {
+    buttonContainer.appendChild(button);
+}
 
+const gearIcon = document.getElementById('gearIcon');
+if (gearIcon) {
+    gearIcon.addEventListener('click', () => {
+        const floatingNav = document.getElementById('floatingNav');
+        if (floatingNav) floatingNav.classList.remove('hidden');
+    });
+}
 
-document.getElementById('closeFloatingNav').addEventListener('click', () => {
-    const floatingNav = document.getElementById('floatingNav');
-    floatingNav.classList.add('hidden');
-});
+const closeFloatingNav = document.getElementById('closeFloatingNav');
+if (closeFloatingNav) {
+    closeFloatingNav.addEventListener('click', () => {
+        const floatingNav = document.getElementById('floatingNav');
+        if (floatingNav) floatingNav.classList.add('hidden');
+    });
+}
 
 const offCanvas = document.getElementById('offCanvas');
-
 const expandOffCanvas = document.getElementById('expandOffCanvas');
 const collapseOffCanvas = document.getElementById('collapseOffCanvas');
 
-expandOffCanvas.addEventListener('click', function () {
-    offCanvas.classList.remove('collapsed');
-    offCanvas.classList.add('expanded');
-    expandOffCanvas.classList.add('hidden');
-    collapseOffCanvas.classList.remove('hidden');
-    allMenuButton.classList.add('hidden');
-});
+if (offCanvas && expandOffCanvas && collapseOffCanvas) {
+    expandOffCanvas.addEventListener('click', function () {
+        offCanvas.classList.remove('collapsed');
+        offCanvas.classList.add('expanded');
+        expandOffCanvas.classList.add('hidden');
+        collapseOffCanvas.classList.remove('hidden');
+        if (allMenuButton) allMenuButton.classList.add('hidden');
+    });
 
-collapseOffCanvas.addEventListener('click', function () {
+    collapseOffCanvas.addEventListener('click', function () {
+        offCanvas.classList.add('collapsed');
+        offCanvas.classList.remove('expanded');
+        collapseOffCanvas.classList.add('hidden');
+        expandOffCanvas.classList.remove('hidden');
+        if (allMenuButton) allMenuButton.classList.remove('hidden');
+    });
+
+    offCanvas.classList.remove('hidden', '-translate-x-full');
     offCanvas.classList.add('collapsed');
     offCanvas.classList.remove('expanded');
-    collapseOffCanvas.classList.add('hidden');
-    expandOffCanvas.classList.remove('hidden');
-    allMenuButton.classList.remove('hidden');
-});
-
-offCanvas.classList.remove('hidden', '-translate-x-full');
-offCanvas.classList.add('collapsed');
-offCanvas.classList.remove('expanded');
+}
 
 function loadMessages() {
     fetch('assets/mock/messages.json')
@@ -570,7 +589,7 @@ export function showToast(messageKey, type = 'success', lang = 'en') {
 }
 window.showToast = showToast;
 
-const languageSwitcher = document.getElementById("languageSwitcher");
+// languageSwitcher is handled below
 
 export const breadcrumb = document.querySelector(".breadcrumb");
 window.breadcrumb = breadcrumb;
@@ -588,18 +607,25 @@ const menuLinks2 = document.querySelectorAll(".menu-item");
 
 // ── 페이지 → GNB 탭 활성화 매핑 ──────────────────────────────────────────
 const PAGE_TAB_MAP = {
+    "index.html":     "index.html",
+    "system.html":    "system.html",
+    "calendar.html":  "system.html",
+    "timeline.html":  "system.html",
+    "trello.html":    "system.html",
+    "flow.html":      "system.html",
+    "stati.html":     "system.html",
+    "orgtree.html":   "system.html",
+    "1.html":         "system.html",
+    "2.html":         "system.html",
+    "4.html":         "system.html",
+    "5.html":         "system.html",
     "aistock.html":   "aistock.html",
     "ceo-diary.html": "aistock.html",
-    "calendar.html":  "calendar.html",
-    "timeline.html":  "calendar.html",
-    "trello.html":    "calendar.html",
-    "flow.html":      "flow.html",
-    "stati.html":     "flow.html",
-    "chain.html":     "flow.html",
-    "glos.html":      "glos.html",
-    "document.html":  "glos.html",
-    "system.html":    "system.html",
-    "orgtree.html":   "system.html",
+    "glos.html":      "aistock.html",
+    "document.html":  "aistock.html",
+    "chain.html":     "aistock.html",
+    "video-ai.html":  "video-ai.html",
+    "burumable.html": "burumable.html",
 };
 const activeTab = PAGE_TAB_MAP[currentPage];
 if (activeTab) {
@@ -624,14 +650,11 @@ window.generateNanoId = generateNanoId;
 
 const memberIcon = document.getElementById('memberIcon');
 const memberMenu = document.getElementById('memberMenu');
-memberMenu.classList.add("hidden");
-
 const logoutModal = document.getElementById('logoutModal');
 
-memberIcon.classList.add("text-gray-200", "hover:text-white", "p-2");
-memberIcon.innerHTML = `<i class="fas fa-user"></i>`;
-
-memberMenu.innerHTML = `<div class="bg-white shadow-lg p-3 rounded-md border">
+if (memberMenu) {
+    memberMenu.classList.add("hidden");
+    memberMenu.innerHTML = `<div class="bg-white shadow-lg p-3 rounded-md border">
                      <a class="dropdown-item" href="#">
                         <div class="d-flex">
                            <div class="me-3">
@@ -654,34 +677,35 @@ memberMenu.innerHTML = `<div class="bg-white shadow-lg p-3 rounded-md border">
                         </div>
                      </a>
                      <div class="dropdown-divider"></div>
+                     <a href="index.html" class="dropdown-item">
+                        <div class="d-flex align-items-center gap-3">
+                           <i class="fas fa-home fs-5 text-blue-500"></i>
+                           <span>포털 인트로 허브</span>
+                        </div>
+                     </a>
+                     <div class="dropdown-divider"></div>
+                     <a href="system.html" class="dropdown-item">
+                        <div class="d-flex align-items-center gap-3">
+                           <i class="fas fa-building fs-5 text-blue-500"></i>
+                           <span>일반 업무 (코드/일정/재무)</span>
+                        </div>
+                     </a>
                      <a href="aistock.html" class="dropdown-item">
                         <div class="d-flex align-items-center gap-3">
-                           <i class="fas fa-microchip fs-5"></i>
-                           <span>AI기업정보</span>
+                           <i class="fas fa-brain fs-5 text-teal-500"></i>
+                           <span>AI 용 업무 (기업/CEO/문서)</span>
                         </div>
                      </a>
-                     <a href="ceo-diary.html" class="dropdown-item">
+                     <a href="video-ai.html" class="dropdown-item">
                         <div class="d-flex align-items-center gap-3">
-                           <i class="fas fa-user-tie fs-5"></i>
-                           <span>CEO 다이어리</span>
+                           <i class="fas fa-film fs-5 text-teal-500"></i>
+                           <span>AI 동영상 생성 판별 포렌식</span>
                         </div>
                      </a>
-                     <a href="calendar.html" class="dropdown-item">
+                     <a href="burumable.html" class="dropdown-item">
                         <div class="d-flex align-items-center gap-3">
-                           <i class="fas fa-calendar-check fs-5"></i>
-                           <span>실적·이벤트 일정</span>
-                        </div>
-                     </a>
-                     <a href="glos.html" class="dropdown-item">
-                        <div class="d-flex align-items-center gap-3">
-                           <i class="fas fa-book-open fs-5"></i>
-                           <span>투자 용어사전</span>
-                        </div>
-                     </a>
-                     <a href="/api-docs" class="dropdown-item">
-                        <div class="d-flex align-items-center gap-3">
-                           <i class="fas fa-code fs-5"></i>
-                           <span>API Docs</span>
+                           <i class="fas fa-dice-d20 fs-5 text-purple-500"></i>
+                           <span>게임 FE (부루마블 3D)</span>
                         </div>
                      </a>
                      <div class="dropdown-divider"></div>
@@ -693,32 +717,36 @@ memberMenu.innerHTML = `<div class="bg-white shadow-lg p-3 rounded-md border">
                      </a>
                      <div class="dropdown-divider"></div>
                 </div>`;
+}
 
-memberIcon.addEventListener('click', function (event) {
-    event.stopPropagation();
+if (memberIcon && memberMenu) {
+    memberIcon.classList.add("text-gray-200", "hover:text-white", "p-2");
+    memberIcon.innerHTML = `<i class="fas fa-user"></i>`;
 
-    memberMenu.style.position = `absolute`;
-    memberMenu.style.top = `45px`;
-    memberMenu.style.right = `20px`;
+    memberIcon.addEventListener('click', function (event) {
+        event.stopPropagation();
+        memberMenu.style.position = `absolute`;
+        memberMenu.style.top = `45px`;
+        memberMenu.style.right = `20px`;
+        memberMenu.classList.remove('hidden');
+        memberMenu.classList.add('show');
+    });
 
-    memberMenu.classList.remove('hidden');
-    memberMenu.classList.add('show');
+    document.addEventListener('click', function (event) {
+        if (!memberIcon.contains(event.target) && !memberMenu.contains(event.target)) {
+            memberMenu.classList.remove('show');
+            memberMenu.classList.add('hidden');
+        }
+    });
 
-
-});
-
-document.addEventListener('click', function (event) {
-    if (!memberIcon.contains(event.target) && !memberMenu.contains(event.target)) {
-        memberMenu.classList.remove('show');
-        memberMenu.classList.add('hidden');
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton && logoutModal) {
+        logoutButton.addEventListener('click', function () {
+            logoutModal.classList.remove('hidden');
+            logoutModal.classList.add('show');
+        });
     }
-});
-
-const logoutButton = document.getElementById('logoutButton');
-logoutButton.addEventListener('click', function () {
-    logoutModal.classList.remove('hidden');
-    logoutModal.classList.add('show');
-});
+}
 
 
 function getFavorites() {
@@ -837,6 +865,7 @@ window.saveFavorite = saveFavorite;
 
 function addBreadcrumbBadges() {
     const breadcrumbContainer = document.querySelector('.breadcrumb');
+    if (!breadcrumbContainer || !breadcrumbContainer.parentNode) return;
     const favoriteContainer = document.createElement('div');
     favoriteContainer.id = 'favorite';
     favoriteContainer.style.display = 'flex';
@@ -855,13 +884,12 @@ function addBreadcrumbBadges() {
 addBreadcrumbBadges();
 
 const fav1 = document.getElementById("fav1");
-createTooltip(fav1, "현재 페이지를 로그인 후 바로가기로 저장합니다.");
+if (fav1) createTooltip(fav1, "현재 페이지를 로그인 후 바로가기로 저장합니다.");
 const fav2 = document.getElementById("fav2");
-createTooltip(fav2, "현재 페이지를 바로가기 목록에 저장합니다.");
+if (fav2) createTooltip(fav2, "현재 페이지를 바로가기 목록에 저장합니다.");
 
 // ── 공통: 페이지별 브레드크럼·사이드바 텍스트 업데이트 ──────────────────────
 function applyPageLabels(offCanvasLabels) {
-    // 페이지 → [브레드크럼key, 사이드바key[]]
     const PAGE_LABELS = {
         "aistock.html":   ["aistock",   ["aistock",  "ceodirary"]],
         "ceo-diary.html": ["ceodirary", ["aistock",  "ceodirary"]],
@@ -885,39 +913,43 @@ function applyPageLabels(offCanvasLabels) {
     });
 }
 
-languageSwitcher.addEventListener("click", function (event) {
+const languageSwitcher = document.getElementById("languageSwitcher");
+if (languageSwitcher) {
+    languageSwitcher.addEventListener("click", function (event) {
+        let lang = event.target.getAttribute("data-lang");
+        localStorage.setItem('lang', lang);
+        if (!lang || !translations[lang]) return;
 
-    let lang = event.target.getAttribute("data-lang");
-    localStorage.setItem('lang', lang);
-    if (!lang || !translations[lang]) return;
+        let tabLabels = translations[lang].tabs;
+        if (tabs && tabs.length >= 6) {
+            if (tabs[0]) tabs[0].textContent = tabLabels.system;
+            if (tabs[1]) tabs[1].textContent = tabLabels.organization;
+            if (tabs[2]) tabs[2].textContent = tabLabels.task;
+            if (tabs[3]) tabs[3].textContent = tabLabels.schedule;
+            if (tabs[4]) tabs[4].textContent = tabLabels.statistics;
+            if (tabs[5]) tabs[5].textContent = tabLabels.settings;
+        }
 
-    let tabLabels = translations[lang].tabs;
-    tabs[0].textContent = tabLabels.system;
-    tabs[1].textContent = tabLabels.organization;
-    tabs[2].textContent = tabLabels.task;
-    tabs[3].textContent = tabLabels.schedule;
-    tabs[4].textContent = tabLabels.statistics;
-    tabs[5].textContent = tabLabels.settings;
-
-    let offCanvasLabels = translations[lang].offCanvas;
-    applyPageLabels(offCanvasLabels);
-
-});
+        let offCanvasLabels = translations[lang].offCanvas;
+        if (offCanvasLabels) applyPageLabels(offCanvasLabels);
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    let lang = localStorage.getItem('lang') || 'ko';
+    if (!translations[lang]) lang = 'ko';
+    let tabLabels = translations[lang]?.tabs;
+    if (tabLabels && tabs && tabs.length >= 6) {
+        if (tabs[0]) tabs[0].textContent = tabLabels.system;
+        if (tabs[1]) tabs[1].textContent = tabLabels.organization;
+        if (tabs[2]) tabs[2].textContent = tabLabels.task;
+        if (tabs[3]) tabs[3].textContent = tabLabels.schedule;
+        if (tabs[4]) tabs[4].textContent = tabLabels.statistics;
+        if (tabs[5]) tabs[5].textContent = tabLabels.settings;
+    }
 
-    let lang = localStorage.getItem('lang');
-    let tabLabels = translations[lang].tabs;
-    tabs[0].textContent = tabLabels.system;
-    tabs[1].textContent = tabLabels.organization;
-    tabs[2].textContent = tabLabels.task;
-    tabs[3].textContent = tabLabels.schedule;
-    tabs[4].textContent = tabLabels.statistics;
-    tabs[5].textContent = tabLabels.settings;
-
-    let offCanvasLabels = translations[lang].offCanvas;
-    applyPageLabels(offCanvasLabels);
-
+    let offCanvasLabels = translations[lang]?.offCanvas;
+    if (offCanvasLabels) applyPageLabels(offCanvasLabels);
 });
 
 //////////////////////////////////////

@@ -1,69 +1,55 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/trello.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>리서치 태스크 - EDUMGT</title>
+  <link href="assets/css/trello.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">리서치 태스크</nav>
 
-    <nav class="breadcrumb"></nav>
-
-    <div id="content">
-        
-
-        <div id="trelloapp">
-            <div id="taskArea">
-
-                <form id="taskForm">
-                    <label for="taskName" class="block mb-1">업무이름:</label>
-                    <input type="text" id="taskName" placeholder="업무 명을 입력하세요." required>
-
-                    <label for="taskDescription" class="block mb-1">업무설명:</label>
-                    <textarea id="taskDescription" placeholder="업무 설명을 입력하세요."></textarea>
-
-                    <div class="flex">
-                        <div class="flex-1 mr-4">
-                            <label for="taskStartDate" class="block mb-1">시작일자:</label>
-                            <input type="date" id="taskStartDate" required>
-                        </div>
-                        <div class="flex-1">
-                            <label for="taskEndDate" class="block mb-1">종료일자:</label>
-                            <input type="date" id="taskEndDate" required>
-                        </div>
-                    </div>
-
-                    <div id="btn-area"></div>
-                    <!-- <button type="submit" class="bg-blue-500 text-white">저장</button> -->
-                </form>
-                <ul id="taskList" class="task-list"></ul>
-            </div>
-            <div id="splitter"></div>
-            <div id="ganttArea">
-                <table class="gantt-table">
-                    <thead>
-                        <tr>
-                            <th>Task Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th class="timeline-column">Timeline</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ganttTableBody"></tbody>
-                </table>
-            </div>
-        </div>
+  <div id="content">
+    <!-- 태스크 등록 폼 -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <input type="text" id="taskName" placeholder="태스크 명" class="border rounded px-3 py-1.5 text-xs outline-none focus:border-blue-500" />
+        <input type="text" id="taskDescription" placeholder="상세 설명" class="border rounded px-3 py-1.5 text-xs outline-none focus:border-blue-500" />
+        <input type="date" id="taskStartDate" class="border rounded px-3 py-1.5 text-xs outline-none focus:border-blue-500" />
+        <input type="date" id="taskEndDate" class="border rounded px-3 py-1.5 text-xs outline-none focus:border-blue-500" />
+      </div>
+      <div class="mt-3 flex justify-end" id="btn-area"></div>
     </div>
 
+    <!-- 간트/태스크 분할 뷰 -->
+    <div id="trelloapp">
+      <div id="taskArea" class="bg-white p-3 rounded-lg border">
+        <h4 class="text-xs font-bold text-gray-700 mb-2">태스크 목록 (드래그하여 순서 변경)</h4>
+        <ul id="taskList" class="task-list"></ul>
+      </div>
 
+      <div id="splitter"></div>
 
-    <script type="module" src="assets/js/logomodule.js"></script>
-    
-    <script type="module" src="assets/js/trello.js"></script>
+      <div id="ganttArea" class="bg-white p-3 rounded-lg border">
+        <h4 class="text-xs font-bold text-gray-700 mb-2">간트 차트 뷰</h4>
+        <table class="gantt-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">태스크</th>
+              <th style="width: 25%;">기간</th>
+              <th class="timeline-column">타임라인 진행도</th>
+            </tr>
+          </thead>
+          <tbody id="ganttTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/trello.js"></script>
 </body>
-
 </html>

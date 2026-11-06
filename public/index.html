@@ -1,120 +1,559 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="assets/css/default.css">
-    <link rel="stylesheet" href="assets/css/login.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDUMGT 통합 포털 — 일반 업무 / AI 용 업무 / 게임 FE</title>
+  <meta name="description" content="일반 업무, AI 용 업무, 게임 FE 3대 영역으로 구성된 EDUMGT 차세대 통합 엔터프라이즈 포털" />
+  <meta property="og:title" content="EDUMGT 통합 포털 — 일반 업무 / AI 용 업무 / 게임 FE" />
+  <meta property="og:description" content="일반 업무, AI 용 업무, 게임 FE 3대 영역으로 구성된 EDUMGT 차세대 통합 엔터프라이즈 포털" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/default.css" />
+  
+  <style>
+    body {
+      background-image: url('assets/img/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1e293b;
+      font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .portal-glass {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+    }
+    .pillar-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1.5px solid transparent;
+    }
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    }
+    .pillar-general {
+      border-top: 4px solid #0058a3;
+    }
+    .pillar-general:hover {
+      border-color: #0058a3;
+    }
+    .pillar-ai {
+      border-top: 4px solid #0f766e;
+    }
+    .pillar-ai:hover {
+      border-color: #0f766e;
+    }
+    .pillar-game {
+      border-top: 4px solid #7c3aed;
+    }
+    .pillar-game:hover {
+      border-color: #7c3aed;
+    }
+    .module-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      color: #334155;
+    }
+    .module-item:hover {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      transform: translateX(3px);
+      color: #0f172a;
+    }
+    .auth-tab-btn {
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .auth-tab-btn.active {
+      background: #0058a3;
+      color: #fff;
+    }
+    .auth-tab-btn.inactive {
+      background: #e2e8f0;
+      color: #64748b;
+    }
+  </style>
 </head>
+<body class="py-6 px-4 md:px-8">
 
-<body class="bg-gray-100 bg-opacity-90">
-    <div class="flex items-center justify-center h-screen">
-        <div class="bg-white p-8 rounded-lg  max-w-md w-full">
-            <div class="text-center mb-6">
-                <a href="#" class="inline-flex items-center space-x-2">
-                    <img src="assets/img/flask-logo.png" alt="Logo" class="w-12 h-12">
-                    <h5 class="text-2xl font-semibold text-gray-800">EDUMGT</h5>
-                </a>
-            </div>
-            <div class="mb-6 text-center">
-                <h5 class="text-xl  text-gray-700">Welcome to EDUMGT Demo</h5>
-                <p class="text-gray-500">데모사용을 위해 로그인 해주세요</p>
-            </div>
-            <div class="mb-6">
-                <ul class="flex justify-center space-x-4 mb-4">
-                    <li><button id="admin-tab" class="tab-button tab-active">Admin</button></li>
-                    <li><button id="manager-tab" class="tab-button tab-inactive">Manager</button></li>
-                    <li><button id="guest-tab" class="tab-button tab-inactive">Guest</button></li>
-                </ul>
-            </div>
-            <div id="admin-form" class="tab-content">
-                <form action="/login" method="post" class="space-y-4" id="loginForm">
-                    <div>
-                        <label for="admin-login-id" class="block text-sm  text-gray-700 mb-1">Admin Login
-                            ID</label>
-                        <input id="admin-login-id" type="text" name="username"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Admin Login ID">
-                    </div>
-                    <div>
-                        <label for="admin-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="admin-password" type="password" name="password"
-                            class="w-full rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="admin-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="admin-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        
-                         <button type="button" id="loginButton" class="btn btn-primary w-100 py-2">login</button>
-                    </div>
-                </form>
-            </div>
-            <div id="manager-form" class="hidden tab-content">
-                <form action="#" method="post" class="space-y-4">
-                    <div>
-                        <label for="manager-login-id" class="block text-sm  text-gray-700 mb-1">Manager Login
-                            ID</label>
-                        <input id="manager-login-id" type="text" name="login-id"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Manager Login ID">
-                    </div>
-                    <div>
-                        <label for="manager-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="manager-password" type="password" name="password"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="manager-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="manager-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        <a href="#" class="btn btn-primary w-100">Login</a>
-                    </div>
-                </form>
-            </div>
-            <div id="guest-form" class="hidden tab-content">
-                <form action="#" method="post" class="space-y-4">
-                    <div>
-                        <label for="guest-login-id" class="block text-sm  text-gray-700 mb-1">Guest Login
-                            ID</label>
-                        <input id="guest-login-id" type="text" name="login-id"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="Enter your Guest Login ID">
-                    </div>
-                    <div>
-                        <label for="guest-password"
-                            class="block text-sm  text-gray-700 mb-1">Password</label>
-                        <input id="guest-password" type="password" name="password"
-                            class="w-full  rounded-lg p-2  "
-                            placeholder="••••••••">
-                    </div>
-                    <div class="flex items-center">
-                        <input id="guest-remember-me" type="checkbox" name="remember-me"
-                            class="h-4 w-4 text-blue-600 ">
-                        <label for="guest-remember-me" class="ml-2 text-sm text-gray-700">Remember Me</label>
-                    </div>
-                    <div>
-                        <a href="#" class="btn btn-primary w-100">Login</a>
-                    </div>
-                </form>
-            </div>
-            <div class="mt-6 flex justify-between text-sm">
-                <a href="register.html" class="text-blue-600 hover:underline">Register</a>
-                <a href="#" class="text-blue-600 hover:underline">Forgot Password?</a>
-            </div>
+  <!-- TOP BRAND / STATUS BAR -->
+  <header class="max-w-7xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 portal-glass rounded-2xl px-6 py-3.5">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-sky-500 flex items-center justify-center text-white font-black text-lg shadow-md">
+        E
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-base font-black text-gray-900 tracking-wide">EDUMGT ENTERPRISE</span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 uppercase">Unified Hub</span>
         </div>
+        <p class="text-[11px] text-gray-500">차세대 통합 관리자 포털 — 3대 핵심 업무 도메인</p>
+      </div>
     </div>
-    <script type="text/javascript" src="assets/js/login.js"></script>
-</body>
 
+    <!-- Quick Status & Role Switcher -->
+    <div class="flex items-center gap-3 text-xs">
+      <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        <span>서버 정상 가동중 (Port 3000)</span>
+      </div>
+
+      <div class="flex items-center bg-gray-100 p-1 rounded-lg">
+        <span class="text-[11px] font-bold text-gray-500 px-2">권한:</span>
+        <button id="quickRoleAdmin" class="auth-tab-btn active" onclick="switchPortalRole('admin')">Admin</button>
+        <button id="quickRoleManager" class="auth-tab-btn inactive" onclick="switchPortalRole('manager')">Manager</button>
+        <button id="quickRoleGuest" class="auth-tab-btn inactive" onclick="switchPortalRole('guest')">Guest</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN HERO TITLE -->
+  <section class="max-w-7xl mx-auto text-center mb-8">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border border-white/60 shadow-xs text-xs font-semibold text-gray-700 mb-3">
+      <i class="fas fa-cubes text-blue-600"></i>
+      <span>3대 서비스 도메인 인트로 허브</span>
+    </div>
+    <h1 class="text-3xl md:text-5xl font-black text-gray-900 tracking-tight drop-shadow-xs">
+      필요한 업무 영역을 선택하세요
+    </h1>
+    <p class="text-sm md:text-base text-gray-700 font-medium mt-2 max-w-2xl mx-auto drop-shadow-2xs">
+      기업 데이터 관리를 위한 <strong>일반 업무</strong>, 최신 생성형 기술을 다루는 <strong>AI 용 업무</strong>,<br class="hidden sm:inline" />
+      인터랙티브 3D 경험을 제공하는 <strong>게임 FE</strong>로 구성되어 있습니다.
+    </p>
+
+    <!-- Quick Category Filter Pills -->
+    <div class="flex flex-wrap justify-center items-center gap-2 mt-5">
+      <button onclick="filterPillar('all')" class="cat-pill active px-4 py-1.5 rounded-full text-xs font-bold transition bg-gray-900 text-white shadow-sm">
+        전체 영역 보기 (15 모듈)
+      </button>
+      <button onclick="filterPillar('general')" class="cat-pill px-4 py-1.5 rounded-full text-xs font-bold transition bg-white/80 hover:bg-white text-blue-800 border border-blue-200">
+        <i class="fas fa-briefcase mr-1.5 text-blue-600"></i>일반 업무 (8 모듈)
+      </button>
+      <button onclick="filterPillar('ai')" class="cat-pill px-4 py-1.5 rounded-full text-xs font-bold transition bg-white/80 hover:bg-white text-emerald-800 border border-emerald-200">
+        <i class="fas fa-robot mr-1.5 text-emerald-600"></i>AI 용 업무 (6 모듈)
+      </button>
+      <button onclick="filterPillar('game')" class="cat-pill px-4 py-1.5 rounded-full text-xs font-bold transition bg-white/80 hover:bg-white text-purple-800 border border-purple-200">
+        <i class="fas fa-gamepad mr-1.5 text-purple-600"></i>게임 FE (3D 차원 보드)
+      </button>
+    </div>
+  </section>
+
+  <!-- 3 PILLARS ARCHITECTURE GRID -->
+  <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 items-stretch">
+
+    <!-- ── PILLAR 1: 일반 업무 (General Business & Operations) ── -->
+    <div id="pillar-general" class="pillar-card pillar-general portal-glass rounded-2xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg font-bold">
+              <i class="fas fa-building"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-700">OPERATIONS & DATA</span>
+              <h2 class="text-xl font-bold text-gray-900">일반 업무</h2>
+            </div>
+          </div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">8개 모듈</span>
+        </div>
+
+        <p class="text-xs text-gray-600 leading-relaxed mb-4">
+          표준 기업 행정 및 운영 시스템입니다. 코드 마스터 데이터 관리, 캘린더 일정, 재무 스프레드시트, 간트 차트, 조직/권한 매트릭스를 제공합니다.
+        </p>
+
+        <!-- Module Links -->
+        <div class="space-y-2 mb-6">
+          <a href="system.html" class="module-item">
+            <i class="fas fa-server text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">종목 코드 관리 (system.html)</div>
+              <div class="text-[10px] text-gray-500">Toast UI Grid 기반 코드 CRUD &amp; 피커</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="calendar.html" class="module-item">
+            <i class="fas fa-calendar-alt text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">실적·이벤트 일정 (calendar.html)</div>
+              <div class="text-[10px] text-gray-500">대화형 월별 일정 및 이벤트 등록/삭제</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="flow.html" class="module-item">
+            <i class="fas fa-chart-line text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">매출·재무분석 (flow.html)</div>
+              <div class="text-[10px] text-gray-500">Handsontable 편집 &amp; ApexCharts 연동</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="trello.html" class="module-item">
+            <i class="fas fa-tasks text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">리서치 태스크 &amp; 간트 (trello.html)</div>
+              <div class="text-[10px] text-gray-500">드래그앤드롭 태스크 &amp; 타임라인 분할 뷰</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="stati.html" class="module-item">
+            <i class="fas fa-users text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">시장통계 &amp; 회원 (stati.html)</div>
+              <div class="text-[10px] text-gray-500">TUI Grid 다중조건 검색 및 모달 편집</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="orgtree.html" class="module-item">
+            <i class="fas fa-shield-alt text-blue-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">조직 &amp; 권한 설정 (orgtree.html)</div>
+              <div class="text-[10px] text-gray-500">부서 트리 구조 및 권한 인라인 편집</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <a href="1.html" class="text-center py-2 px-1 rounded-lg bg-gray-50 border hover:bg-white text-[11px] font-semibold text-gray-700">
+              <i class="fas fa-table mr-1 text-blue-500"></i>강의시간표 (1.html)
+            </a>
+            <a href="2.html" class="text-center py-2 px-1 rounded-lg bg-gray-50 border hover:bg-white text-[11px] font-semibold text-gray-700">
+              <i class="fas fa-calculator mr-1 text-blue-500"></i>수강신청견적 (2.html)
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <a href="system.html" class="w-full py-3 px-4 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-md shadow-blue-700/20 transition">
+        <span>일반 업무 바로 시작하기</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+
+    <!-- ── PILLAR 2: AI 용 업무 (AI Forensics & Market Intelligence) ── -->
+    <div id="pillar-ai" class="pillar-card pillar-ai portal-glass rounded-2xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center text-lg font-bold">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700">AI &amp; INTELLIGENCE</span>
+              <h2 class="text-xl font-bold text-gray-900">AI 용 업무</h2>
+            </div>
+          </div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">6개 모듈</span>
+        </div>
+
+        <p class="text-xs text-gray-600 leading-relaxed mb-4">
+          인공지능 및 시장 분석 전용 인텔리전스 스위트입니다. 13대 AI 기업 분석, 리더 활동 다이어리, 브라우저 동영상 포렌식 판별, 문서 분석을 지원합니다.
+        </p>
+
+        <!-- Module Links -->
+        <div class="space-y-2 mb-6">
+          <a href="aistock.html" class="module-item">
+            <i class="fas fa-microchip text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">AI·반도체 기업 정보 (aistock.html)</div>
+              <div class="text-[10px] text-gray-500">13개 빅테크 시총, 실적, 이벤트 타임라인</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="video-ai.html" class="module-item border-teal-300 bg-teal-50/40">
+            <i class="fas fa-film text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-teal-900">AI 동영상 생성 판별 포렌식 (video-ai.html)</div>
+              <div class="text-[10px] text-teal-700">MP4 프레임 단위 미세 질감 &amp; 생성형 패턴 추정</div>
+            </div>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 bg-teal-600 text-white rounded">NEW</span>
+          </a>
+
+          <a href="ceo-diary.html" class="module-item">
+            <i class="fas fa-user-tie text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">글로벌 AI CEO 다이어리 (ceo-diary.html)</div>
+              <div class="text-[10px] text-gray-500">젠슨 황, 샘 올트먼 등 리더 일정 &amp; 국가 통계</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="document.html" class="module-item">
+            <i class="fas fa-file-alt text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">뉴스 문서분석 (document.html)</div>
+              <div class="text-[10px] text-gray-500">PDF·문서 드래그앤드롭 업로드 &amp; 뷰어</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="glos.html" class="module-item">
+            <i class="fas fa-book-open text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">투자·AI 용어사전 (glos.html)</div>
+              <div class="text-[10px] text-gray-500">전문 용어 CRUD, 실시간 검색 &amp; 카드뷰</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+
+          <a href="chain.html" class="module-item">
+            <i class="fas fa-link text-teal-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">글로벌 섹터·공급망 (chain.html)</div>
+              <div class="text-[10px] text-gray-500">ag-Grid 기업 거점 &amp; ApexCharts 분포</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <a href="aistock.html" class="w-full py-3 px-4 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-md shadow-teal-700/20 transition">
+        <span>AI 업무 포털 진입하기</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+
+    <!-- ── PILLAR 3: 게임 FE (Game Frontend & 3D Interactive) ── -->
+    <div id="pillar-game" class="pillar-card pillar-game portal-glass rounded-2xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold">
+              <i class="fas fa-dice-d20"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700">3D CANVAS &amp; INTERACTIVE</span>
+              <h2 class="text-xl font-bold text-gray-900">게임 FE</h2>
+            </div>
+          </div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">인터랙티브 3D</span>
+        </div>
+
+        <p class="text-xs text-gray-600 leading-relaxed mb-4">
+          캔버스 및 3D CSS 차원 공간 기반의 게임 프론트엔드입니다. 20개 세계 도시 궤도형 부루마블 보드, 3D 주사위 롤링 물리, 자산 증권 시스템을 플레이할 수 있습니다.
+        </p>
+
+        <!-- Preview Card -->
+        <div class="mb-6 rounded-xl bg-slate-900 text-white p-4 border border-purple-500/30 relative overflow-hidden shadow-inner">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono text-purple-300">BLUE MARBLE 3D</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 font-bold">NEON CITY</span>
+          </div>
+
+          <div class="flex items-center justify-center py-4 gap-4">
+            <!-- 3D Mini Board Visual Graphic -->
+            <div class="w-20 h-20 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-600 to-indigo-800 p-1 flex items-center justify-center shadow-lg transform rotate-12">
+              <div class="w-full h-full border border-white/40 rounded-lg flex flex-col items-center justify-center text-center p-1">
+                <span class="text-[8px] font-bold">PARIS (11)</span>
+                <span class="w-3 h-3 rounded-full bg-amber-400 shadow-amber-400 shadow-md"></span>
+              </div>
+            </div>
+
+            <!-- Dice Graphic -->
+            <div class="flex flex-col gap-1 text-center">
+              <div class="text-xs font-bold text-sky-400">3D 주사위 롤링</div>
+              <div class="text-[11px] text-slate-300">6 + 5 = 11 타일 이동</div>
+              <div class="text-[10px] text-amber-400 font-bold">₩ 3,450,000 보유</div>
+            </div>
+          </div>
+
+          <!-- Feature List -->
+          <div class="border-t border-slate-800 pt-3 text-[11px] space-y-1 text-slate-300">
+            <div class="flex items-center gap-1.5"><i class="fas fa-check text-purple-400 text-xs"></i> 20개 세계 도시 궤도형 테이블탑 디스플레이</div>
+            <div class="flex items-center gap-1.5"><i class="fas fa-check text-purple-400 text-xs"></i> 실시간 3D 큐브 주사위 회전 &amp; 물리 연산</div>
+            <div class="flex items-center gap-1.5"><i class="fas fa-check text-purple-400 text-xs"></i> 골든 마블 토큰 순차 이동 &amp; 도시 자산 매입</div>
+          </div>
+        </div>
+
+        <!-- Extra Tech links -->
+        <div class="space-y-2 mb-6">
+          <a href="burumable.html?demo=1" class="module-item border-purple-300 bg-purple-50/40">
+            <i class="fas fa-dice text-purple-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-purple-900">부루마블 3D 차원 보드 (burumable.html)</div>
+              <div class="text-[10px] text-purple-700">curated capture state (?demo=1) 즉시 실행</div>
+            </div>
+            <i class="fas fa-play text-xs text-purple-600"></i>
+          </a>
+          <a href="4.html" class="module-item">
+            <i class="fas fa-database text-purple-600 w-5 text-center"></i>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-gray-800">DB Admin &amp; SQL 콘솔 (4.html)</div>
+              <div class="text-[10px] text-gray-500">동적 쿼리 &amp; 게임 상태 데이터베이스 연동</div>
+            </div>
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <a href="burumable.html" class="w-full py-3 px-4 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-md shadow-purple-700/20 transition">
+        <span>게임 FE 플레이하기 (3D 부루마블)</span>
+        <i class="fas fa-gamepad"></i>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- QUICK AUTH & LOGIN DIALOG MODAL / DRAWER -->
+  <section class="max-w-7xl mx-auto portal-glass rounded-2xl p-6 border mb-8">
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b">
+      <div>
+        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+          <i class="fas fa-key text-blue-600"></i>
+          <span>권한별 빠른 로그인 및 자격 증명</span>
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">역할(Role)을 선택하면 권한 토큰이 갱신되어 해당 업무 화면으로 바로 연결됩니다.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-500">기본 페이지 지정:</span>
+        <select id="directLaunchTarget" class="text-xs border rounded-lg px-2.5 py-1.5 bg-white outline-none font-semibold">
+          <option value="system.html">📁 일반 업무 — 종목 코드 관리 (system.html)</option>
+          <option value="calendar.html">📁 일반 업무 — 일정·이벤트 (calendar.html)</option>
+          <option value="flow.html">📁 일반 업무 — 매출·재무 (flow.html)</option>
+          <option value="aistock.html" selected>🤖 AI 업무 — AI기업정보 (aistock.html)</option>
+          <option value="video-ai.html">🤖 AI 업무 — AI 영상 생성 판별 (video-ai.html)</option>
+          <option value="ceo-diary.html">🤖 AI 업무 — CEO 다이어리 (ceo-diary.html)</option>
+          <option value="burumable.html">🎲 게임 FE — 부루마블 3D (burumable.html)</option>
+        </select>
+        <button id="directLaunchBtn" class="text-xs font-bold px-4 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black transition">
+          선택 화면 열기
+        </button>
+      </div>
+    </div>
+
+    <!-- Login credentials preview bar -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+      <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200 flex items-center justify-between">
+        <div>
+          <div class="text-xs font-bold text-blue-900">Admin (최고 관리자)</div>
+          <div class="text-[11px] text-blue-700">ID: <code>admin</code> / PW: <code>1111</code></div>
+          <div class="text-[10px] text-gray-500">일반 업무 + AI 업무 + 게임 FE 전체 권한</div>
+        </div>
+        <button onclick="loginAs('admin')" class="text-xs font-bold px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700">로그인</button>
+      </div>
+
+      <div class="p-3 rounded-xl bg-teal-50/70 border border-teal-200 flex items-center justify-between">
+        <div>
+          <div class="text-xs font-bold text-teal-900">Manager (운영 매니저)</div>
+          <div class="text-[11px] text-teal-700">ID: <code>manager</code> / PW: <code>1111</code></div>
+          <div class="text-[10px] text-gray-500">일반 업무 조회/편집 &amp; AI 포렌식 운영</div>
+        </div>
+        <button onclick="loginAs('manager')" class="text-xs font-bold px-3 py-1.5 rounded bg-teal-600 text-white hover:bg-teal-700">로그인</button>
+      </div>
+
+      <div class="p-3 rounded-xl bg-purple-50/70 border border-purple-200 flex items-center justify-between">
+        <div>
+          <div class="text-xs font-bold text-purple-900">Guest (게스트 체험)</div>
+          <div class="text-[11px] text-purple-700">ID: <code>guest</code> / PW: <code>1111</code></div>
+          <div class="text-[10px] text-gray-500">게임 FE 플레이 및 인텔리전스 체험</div>
+        </div>
+        <button onclick="loginAs('guest')" class="text-xs font-bold px-3 py-1.5 rounded bg-purple-600 text-white hover:bg-purple-700">체험하기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="max-w-7xl mx-auto text-center text-xs text-white/80 drop-shadow-xs pb-6">
+    EDUMGT Enterprise Multi-Pillar Web Platform &bull; Express 5 &amp; TypeScript &bull; Port 3000
+  </footer>
+
+  <script>
+    // Role Switching
+    let currentRole = localStorage.getItem('userRole') || 'admin';
+
+    function switchPortalRole(role) {
+      currentRole = role;
+      localStorage.setItem('userRole', role);
+      document.getElementById('quickRoleAdmin').className = role === 'admin' ? 'auth-tab-btn active' : 'auth-tab-btn inactive';
+      document.getElementById('quickRoleManager').className = role === 'manager' ? 'auth-tab-btn active' : 'auth-tab-btn inactive';
+      document.getElementById('quickRoleGuest').className = role === 'guest' ? 'auth-tab-btn active' : 'auth-tab-btn inactive';
+    }
+
+    async function loginAs(role) {
+      switchPortalRole(role);
+      const target = document.getElementById('directLaunchTarget').value;
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: role, password: '1111', role })
+        });
+        if (res.ok) {
+          window.location.href = target;
+        } else {
+          window.location.href = target;
+        }
+      } catch (e) {
+        window.location.href = target;
+      }
+    }
+
+    document.getElementById('directLaunchBtn').addEventListener('click', () => {
+      const target = document.getElementById('directLaunchTarget').value;
+      window.location.href = target;
+    });
+
+    // Pillar Filter Buttons
+    function filterPillar(type) {
+      const g = document.getElementById('pillar-general');
+      const a = document.getElementById('pillar-ai');
+      const m = document.getElementById('pillar-game');
+
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-gray-900', 'text-white');
+        btn.classList.add('bg-white/80', 'text-gray-700');
+      });
+      event.target.classList.remove('bg-white/80', 'text-gray-700');
+      event.target.classList.add('bg-gray-900', 'text-white');
+
+      if (type === 'all') {
+        g.style.display = 'flex';
+        a.style.display = 'flex';
+        m.style.display = 'flex';
+      } else if (type === 'general') {
+        g.style.display = 'flex';
+        a.style.display = 'none';
+        m.style.display = 'none';
+      } else if (type === 'ai') {
+        g.style.display = 'none';
+        a.style.display = 'flex';
+        m.style.display = 'none';
+      } else if (type === 'game') {
+        g.style.display = 'none';
+        a.style.display = 'none';
+        m.style.display = 'flex';
+      }
+    }
+
+    // Initialize state
+    switchPortalRole(currentRole);
+  </script>
+</body>
 </html>

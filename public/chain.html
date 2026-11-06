@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/flow.css" rel="stylesheet">
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>섹터·공급망 - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .custom-grid {
+      height: 380px;
+      width: 100%;
+    }
+  </style>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">섹터·공급망</nav>
 
-    <nav class="breadcrumb"></nav>
-
-    <div id="content">
-        
-
-        <div id="myGrid"></div>
-        <div id="charts">
-            <div id="lineChart"></div>
-            <div id="pieChart"></div>
-        </div>
+  <div id="content" class="space-y-6">
+    <div class="bg-white p-4 rounded-xl shadow-sm border">
+      <h3 class="text-sm font-bold text-gray-700 mb-3"><i class="fas fa-link mr-2 text-blue-600"></i>공급망 및 기업 거점 목록</h3>
+      <div id="myGrid" class="ag-theme-alpine custom-grid"></div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border">
+        <div id="lineChart"></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border">
+        <div id="pieChart"></div>
+      </div>
+    </div>
+  </div>
 
-    <script type="module" src="assets/vendor/apexcharts/dist/apexcharts.js"></script>
-    <script type="module" src="assets/vendor/ag-grid-community/dist/ag-grid-community.noStyle.js"></script>
-    <script type="module" src="assets/js/logomodule.js"></script>
-    
-    <script type="module" src="assets/js/chain.js"></script>
+  <script src="assets/vendor/ag-grid-community/dist/ag-grid-community.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/chain.js"></script>
 </body>
-
 </html>

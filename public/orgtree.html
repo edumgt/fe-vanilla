@@ -1,28 +1,26 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="assets/css/flow.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>설정관리 (조직 및 권한) - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
-    <div id="cmmContainer"></div>
-    
-    <div id="content">
-        <nav class="breadcrumb"></nav>
-        <div id="workarea">
-            <div id="org-chart"></div>
-            <div id="permissions"></div>
-        </div>
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">설정관리</nav>
+
+  <div id="content">
+    <div id="workarea" class="flex gap-4" style="height: calc(100vh - 120px);">
+      <div id="org-chart" class="bg-white rounded-xl shadow-sm border p-4"></div>
+      <div id="permissions" class="bg-white rounded-xl shadow-sm border p-4"></div>
     </div>
+  </div>
 
-    
-    <script type="module" src="assets/vendor/ag-grid-community/dist/ag-grid-community.noStyle.js"></script>
-    <script type="module" src="assets/js/logomodule.js"></script>
-    
-    <script type="module" src="assets/js/orgtree2.js"></script>
-    
+  <script src="assets/vendor/ag-grid-community/dist/ag-grid-community.js"></script>
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/orgtree2.js"></script>
 </body>
-
 </html>

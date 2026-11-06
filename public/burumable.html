@@ -3,1131 +3,582 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blue Marble 3D Demo</title>
+  <title>게임 FE — 부루마블 3D 네온 에디션</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --bg-0: #040814;
-      --bg-1: #0b1426;
-      --panel: rgba(9, 16, 29, 0.82);
-      --panel-strong: rgba(12, 20, 37, 0.9);
-      --line: rgba(148, 163, 184, 0.18);
-      --text: #edf4ff;
-      --muted: #a5b4cf;
-      --glow-cyan: rgba(34, 211, 238, 0.28);
-      --glow-pink: rgba(236, 72, 153, 0.2);
-      --glow-gold: rgba(245, 158, 11, 0.22);
-      --button-top: #8ef5ff;
-      --button-bottom: #15a9d8;
-      --shadow-heavy: 0 30px 80px rgba(2, 6, 23, 0.6);
-      --board-size: min(82vw, 760px);
-      color-scheme: dark;
+      --bg-space: #070a12;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(56, 189, 248, 0.18);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
+      background: radial-gradient(circle at 50% 20%, #0d1527 0%, #05070d 100%);
+      color: #e2e8f0;
+      font-family: 'Pretendard Variable', -apple-system, sans-serif;
       min-height: 100vh;
-      font-family: "Trebuchet MS", "Segoe UI", "Malgun Gothic", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 18%, rgba(0, 255, 214, 0.16), transparent 26%),
-        radial-gradient(circle at 85% 14%, rgba(125, 90, 255, 0.18), transparent 26%),
-        radial-gradient(circle at 78% 82%, rgba(255, 122, 89, 0.18), transparent 30%),
-        linear-gradient(160deg, #050814 0%, #08111f 45%, #02050d 100%);
       overflow-x: hidden;
     }
-
-    .ambient {
-      position: fixed;
-      inset: auto;
-      pointer-events: none;
-      z-index: 0;
-      border-radius: 999px;
-      filter: blur(18px);
-      opacity: 0.65;
-    }
-
-    .ambient-left {
-      width: 320px;
-      height: 320px;
-      left: -100px;
-      top: 80px;
-      background: var(--glow-cyan);
-    }
-
-    .ambient-right {
-      width: 360px;
-      height: 360px;
-      right: -120px;
-      top: 120px;
-      background: var(--glow-pink);
-    }
-
-    .ambient-bottom {
-      width: 420px;
-      height: 420px;
-      right: 10%;
-      bottom: -180px;
-      background: var(--glow-gold);
-    }
-
-    .game-shell {
-      position: relative;
-      z-index: 1;
-      width: min(1480px, calc(100% - 36px));
-      margin: 0 auto;
-      padding: 36px 0 42px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(340px, 420px);
-      gap: 26px;
-      align-items: start;
-    }
-
-    .panel {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(14, 22, 40, 0.92), rgba(6, 10, 21, 0.92));
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      box-shadow: var(--shadow-heavy);
-      backdrop-filter: blur(14px);
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(130deg, rgba(255, 255, 255, 0.12), transparent 34%, transparent 66%, rgba(255, 255, 255, 0.05));
-      pointer-events: none;
-    }
-
-    .hero-panel {
-      padding: 26px 28px 34px;
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      font-size: 12px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: #76e4ff;
-    }
-
-    .hero-panel h1 {
-      margin: 0;
-      font-size: clamp(2rem, 2.6vw, 3.4rem);
-      line-height: 0.95;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      text-shadow: 0 0 24px rgba(56, 189, 248, 0.26);
-    }
-
-    .subtitle {
-      margin: 14px 0 0;
-      max-width: 700px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    .board-shell {
-      position: relative;
-      margin-top: 28px;
-      min-height: 760px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      perspective: 2200px;
-    }
-
-    .board-glow {
-      position: absolute;
-      inset: auto 12% 8% 12%;
-      height: 160px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.3), rgba(56, 189, 248, 0.06) 50%, transparent 72%);
-      filter: blur(18px);
-      pointer-events: none;
-    }
-
-    .board-shadow {
-      position: absolute;
-      width: 82%;
-      height: 150px;
-      bottom: 28px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(2, 6, 23, 0.72), transparent 72%);
-      filter: blur(18px);
-      pointer-events: none;
-    }
-
-    .board-tilt {
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(17deg) rotateZ(-8deg);
-    }
-
-    .board-tilt::before {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border-radius: 36px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
-      transform: translateZ(-42px) translateY(28px);
-      filter: blur(10px);
-    }
-
-    .board-bezel {
-      position: relative;
-      padding: 22px;
-      border-radius: 42px;
-      background:
-        linear-gradient(145deg, #dce8f8 0%, #7b8ba4 18%, #20314b 52%, #0b1322 100%);
-      box-shadow:
-        0 42px 60px rgba(2, 6, 23, 0.62),
-        inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 -18px 24px rgba(2, 6, 23, 0.44);
-    }
-
-    .board-bezel::after {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border-radius: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      pointer-events: none;
-    }
-
-    #board {
-      display: block;
-      width: var(--board-size);
-      height: auto;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #07101b, #030811);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 -32px 40px rgba(0, 0, 0, 0.36);
-    }
-
-    .side-panel {
-      display: grid;
-      gap: 18px;
-    }
-
-    .status-card,
-    .dice-card,
-    .palette-card {
-      padding: 22px;
-    }
-
-    .card-title {
-      margin: 0 0 16px;
-      font-size: 13px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #72ddff;
-    }
-
-    .metrics {
-      display: grid;
-      gap: 12px;
-    }
-
-    .metric {
-      position: relative;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(18, 29, 53, 0.95), rgba(8, 12, 24, 0.92));
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    }
-
-    .metric-label {
-      display: block;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted);
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 1.1rem;
-      color: var(--text);
-      word-break: keep-all;
-    }
-
-    .metric strong.accent {
-      color: #8fe5ff;
-    }
-
-    .dice-podium {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      padding: 12px 0 18px;
-      min-height: 188px;
-      position: relative;
-    }
-
-    .dice-podium::before {
-      content: "";
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 8px;
-      height: 34px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(56, 189, 248, 0.05) 55%, transparent 80%);
-      filter: blur(10px);
-    }
-
-    .die-scene {
-      width: 118px;
-      height: 118px;
-      display: grid;
-      place-items: center;
-      perspective: 960px;
-      transform: rotateX(-8deg);
-      position: relative;
-    }
-
-    .die-scene:nth-child(1) {
-      transform: rotateX(-10deg) rotateY(-6deg);
-    }
-
-    .die-scene:nth-child(2) {
-      transform: rotateX(-6deg) rotateY(7deg);
-    }
-
-    .die-cube {
-      width: 92px;
-      height: 92px;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 760ms cubic-bezier(0.18, 0.82, 0.19, 1);
-    }
-
-    .die-face {
-      position: absolute;
-      inset: 0;
-      padding: 12px;
-      border-radius: 22px;
-      background:
-        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.94), rgba(235, 242, 250, 0.95) 34%, rgba(199, 213, 230, 0.92) 100%);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.92),
-        inset 0 -10px 18px rgba(120, 137, 160, 0.34),
-        0 18px 26px rgba(2, 6, 23, 0.22);
-      display: grid;
-      place-items: center;
-      backface-visibility: hidden;
-    }
-
-    .face-1 { transform: translateZ(46px); }
-    .face-2 { transform: rotateX(-90deg) translateZ(46px); }
-    .face-3 { transform: rotateY(90deg) translateZ(46px); }
-    .face-4 { transform: rotateY(-90deg) translateZ(46px); }
-    .face-5 { transform: rotateX(90deg) translateZ(46px); }
-    .face-6 { transform: rotateY(180deg) translateZ(46px); }
-
-    .pip-grid {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      place-items: center;
-    }
-
-    .pip {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #27415f 0%, #0d1a2b 42%, #030712 100%);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 5px rgba(2, 6, 23, 0.22);
-      opacity: 0;
-    }
-
-    .pip.on {
-      opacity: 1;
-    }
-
-    .roll-button {
-      width: 100%;
-      border: none;
-      border-radius: 18px;
-      padding: 15px 18px;
-      background: linear-gradient(180deg, var(--button-top), var(--button-bottom));
-      color: #02111d;
-      font-weight: 800;
-      font-size: 1rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow:
-        0 18px 28px rgba(15, 169, 216, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.72);
-      transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
-    }
-
-    .roll-button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow:
-        0 22px 32px rgba(15, 169, 216, 0.34),
-        inset 0 1px 0 rgba(255, 255, 255, 0.82);
-      filter: saturate(1.08);
-    }
-
-    .roll-button:disabled {
-      cursor: not-allowed;
-      opacity: 0.62;
-      transform: none;
-    }
-
-    .dice-note {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .city-palette {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .city-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
+    .neon-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      background: rgba(12, 18, 31, 0.82);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-
-    .city-chip.active {
-      transform: translateX(4px);
-      border-color: rgba(255, 255, 255, 0.2);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(13, 20, 34, 0.92));
+    /* 3D Board Container */
+    .board-stage {
+      perspective: 1200px;
+      perspective-origin: 50% 60%;
     }
-
-    .city-swatch {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      box-shadow: 0 0 14px var(--chip-color);
-      background: var(--chip-color);
-      flex: none;
+    .board-tilted {
+      transform-style: preserve-3d;
+      transform: rotateX(24deg) rotateZ(0deg);
+      transition: transform 0.4s ease;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 50px rgba(14, 165, 233, 0.15);
+      border-radius: 28px;
     }
-
-    .city-chip span:last-child {
-      font-size: 13px;
-      color: #dce7f8;
-      line-height: 1.2;
-      word-break: keep-all;
+    /* Tiles */
+    .city-tile {
+      position: relative;
+      border-radius: 10px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8px 6px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
     }
-
-    @media (max-width: 1180px) {
-      .game-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .board-shell {
-        min-height: 650px;
-      }
-
-      .side-panel {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .palette-card {
-        grid-column: 1 / -1;
-      }
+    .city-tile:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(255,255,255,0.25);
+      z-index: 20;
     }
-
-    @media (max-width: 860px) {
-      .game-shell {
-        width: min(100%, calc(100% - 20px));
-        padding-top: 20px;
-      }
-
-      .hero-panel {
-        padding: 20px 18px 24px;
-      }
-
-      .subtitle {
-        font-size: 14px;
-      }
-
-      .board-shell {
-        min-height: 480px;
-        margin-top: 18px;
-      }
-
-      .board-tilt {
-        transform: rotateX(11deg) rotateZ(-5deg);
-      }
-
-      .board-bezel {
-        padding: 14px;
-        border-radius: 28px;
-      }
-
-      #board {
-        width: min(100%, 92vw);
-        border-radius: 16px;
-      }
-
-      .side-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .city-palette {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .dice-podium {
-        min-height: 160px;
-      }
+    .city-tile.active-token {
+      border-color: #fde047 !important;
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.8), inset 0 0 15px rgba(250, 204, 21, 0.4) !important;
+      transform: scale(1.05);
+      z-index: 25;
     }
+    /* Token Ball */
+    .token-orb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fffbeb 0%, #f59e0b 50%, #b45309 100%);
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.9), inset 0 0 6px #ffffff;
+      animation: pulseToken 1.5s infinite alternate ease-in-out;
+      margin: 0 auto;
+    }
+    @keyframes pulseToken {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.7); }
+      100% { transform: scale(1.25); box-shadow: 0 0 22px rgba(253, 224, 71, 1); }
+    }
+    /* 3D Dice */
+    .dice-cube {
+      width: 54px;
+      height: 54px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .dice-face {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      display: grid;
+      padding: 6px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .pip {
+      width: 9px;
+      height: 9px;
+      background: #0f172a;
+      border-radius: 50%;
+      align-self: center;
+      justify-self: center;
+    }
+    .face-1 { transform: rotateY(0deg) translateZ(27px); display: flex; align-items: center; justify-content: center; }
+    .face-1 .pip { width: 13px; height: 13px; background: #e11d48; }
+    .face-2 { transform: rotateY(90deg) translateZ(27px); display: flex; justify-content: space-between; }
+    .face-3 { transform: rotateY(180deg) translateZ(27px); display: flex; justify-content: space-between; }
+    .face-3 .pip:nth-child(2) { align-self: center; }
+    .face-4 { transform: rotateY(-90deg) translateZ(27px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .face-5 { transform: rotateX(90deg) translateZ(27px); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+    .face-5 .pip:nth-child(1) { grid-area: 1 / 1; }
+    .face-5 .pip:nth-child(2) { grid-area: 1 / 3; }
+    .face-5 .pip:nth-child(3) { grid-area: 2 / 2; }
+    .face-5 .pip:nth-child(4) { grid-area: 3 / 1; }
+    .face-5 .pip:nth-child(5) { grid-area: 3 / 3; }
+    .face-6 { transform: rotateX(-90deg) translateZ(27px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); }
 
-    @media (max-width: 560px) {
-      .city-palette {
-        grid-template-columns: 1fr;
-      }
-
-      .dice-podium {
-        gap: 8px;
-      }
-
-      .die-scene {
-        width: 98px;
-        height: 98px;
-      }
-
-      .die-cube {
-        width: 82px;
-        height: 82px;
-      }
-
-      .face-1 { transform: translateZ(41px); }
-      .face-2 { transform: rotateX(-90deg) translateZ(41px); }
-      .face-3 { transform: rotateY(90deg) translateZ(41px); }
-      .face-4 { transform: rotateY(-90deg) translateZ(41px); }
-      .face-5 { transform: rotateX(90deg) translateZ(41px); }
-      .face-6 { transform: rotateY(180deg) translateZ(41px); }
+    /* Roll animation */
+    .dice-rolling {
+      animation: spinDice 0.8s ease-in-out;
+    }
+    @keyframes spinDice {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      50% { transform: rotateX(540deg) rotateY(360deg) rotateZ(180deg) scale(1.15); }
+      100% { transform: rotateX(1080deg) rotateY(720deg) rotateZ(360deg); }
     }
   </style>
 </head>
-<body>
-  <div class="ambient ambient-left"></div>
-  <div class="ambient ambient-right"></div>
-  <div class="ambient ambient-bottom"></div>
+<body class="p-4 md:p-6">
+  <div id="cmmContainer"></div>
 
-  <main class="game-shell">
-    <section class="panel hero-panel">
-      <p class="eyebrow">Orbital Board Experience</p>
-      <h1>Blue Marble<br />Dimension Table</h1>
-      <p class="subtitle">
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto mb-6 flex flex-wrap justify-between items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="text-xs px-2.5 py-1 rounded bg-slate-800 text-sky-400 hover:bg-slate-700 font-semibold border border-sky-500/30">
+          <i class="fas fa-home mr-1"></i>인트로 허브
+        </a>
+        <span class="text-xs text-sky-400 font-bold uppercase tracking-wider">GAME FRONTEND &bull; 3D CANVAS</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-wide mt-1">
+        BLUE MARBLE <span class="text-sky-400 font-light">DIMENSION TABLE</span>
+      </h1>
+      <p class="text-xs text-slate-400 mt-1 max-w-xl">
         The board is staged like a tilted tabletop display, with stronger city accents and a deeper neon center platform.
         The dice are rendered as actual 3D cubes, and each roll spins the cubes before moving the token across the board.
       </p>
+    </div>
 
-      <div class="board-shell">
-        <div class="board-glow"></div>
-        <div class="board-shadow"></div>
-        <div class="board-tilt">
-          <div class="board-bezel">
-            <canvas id="board" width="760" height="760" aria-label="Blue Marble 3D board"></canvas>
+    <!-- Mode Badge -->
+    <div class="flex items-center gap-3">
+      <div class="px-4 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-right">
+        <div class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">보유 자산</div>
+        <div id="playerFunds" class="text-lg font-black text-amber-400">₩ 3,450,000</div>
+      </div>
+      <button id="resetGameBtn" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold border border-slate-700">
+        <i class="fas fa-redo-alt mr-1"></i>초기화
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Grid: 3D Board vs Right Panels -->
+  <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- Left/Center: 3D Board Stage -->
+    <div class="lg:col-span-8 flex justify-center board-stage">
+      <div id="boardTable" class="board-tilted w-[620px] h-[620px] md:w-[680px] md:h-[680px] bg-slate-950 p-4 border-2 border-slate-700/80 relative">
+        <!-- 20 Grid Board (6x6 Grid with center cutout) -->
+        <div class="grid grid-cols-6 grid-rows-6 gap-2 w-full h-full">
+
+          <!-- TOP ROW: Tiles 10 to 15 (Left to Right) -->
+          <!-- Tile 10: LONDON -->
+          <div id="tile-10" class="city-tile bg-gradient-to-br from-purple-500 to-indigo-700 text-white" data-city="London" data-index="10">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">LONDON</span><span class="text-[9px] bg-black/40 rounded px-1">10</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-purple-200 text-right">₩42만</div>
+          </div>
+          <!-- Tile 11: PARIS -->
+          <div id="tile-11" class="city-tile bg-gradient-to-br from-purple-400 to-pink-600 text-white" data-city="Paris" data-index="11">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">PARIS</span><span class="text-[9px] bg-black/40 rounded px-1">11</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-pink-200 text-right">₩45만</div>
+          </div>
+          <!-- Tile 12: ROME -->
+          <div id="tile-12" class="city-tile bg-gradient-to-br from-indigo-400 to-purple-600 text-white" data-city="Rome" data-index="12">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">ROME</span><span class="text-[9px] bg-black/40 rounded px-1">12</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-indigo-200 text-right">₩38만</div>
+          </div>
+          <!-- Tile 13: BERLIN -->
+          <div id="tile-13" class="city-tile bg-gradient-to-br from-rose-400 to-red-600 text-white" data-city="Berlin" data-index="13">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">BERLIN</span><span class="text-[9px] bg-black/40 rounded px-1">13</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-rose-200 text-right">₩36만</div>
+          </div>
+          <!-- Tile 14: MOSCOW -->
+          <div id="tile-14" class="city-tile bg-gradient-to-br from-red-500 to-rose-700 text-white" data-city="Moscow" data-index="14">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">MOSCOW</span><span class="text-[9px] bg-black/40 rounded px-1">14</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-red-200 text-right">₩34만</div>
+          </div>
+          <!-- Tile 15: CAIRO -->
+          <div id="tile-15" class="city-tile bg-gradient-to-br from-orange-400 to-red-500 text-white" data-city="Cairo" data-index="15">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">CAIRO</span><span class="text-[9px] bg-black/40 rounded px-1">15</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-orange-200 text-right">₩30만</div>
+          </div>
+
+          <!-- ROW 2: Tile 9 (Left) & Tile 16 (Right) -->
+          <div id="tile-9" class="city-tile bg-gradient-to-br from-green-500 to-emerald-700 text-white" data-city="New York" data-index="9">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">NEW YORK</span><span class="text-[9px] bg-black/40 rounded px-1">9</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-emerald-200 text-right">₩50만</div>
+          </div>
+
+          <!-- CENTER 4x4 NEON CORE -->
+          <div class="col-span-4 row-span-4 bg-slate-900/90 rounded-2xl border-2 border-cyan-500/30 flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-6">
+            <!-- Orbital circles background -->
+            <div class="absolute w-72 h-72 border border-sky-500/20 rounded-full animate-pulse"></div>
+            <div class="absolute w-52 h-52 border border-cyan-400/20 rounded-full"></div>
+            <div class="absolute w-96 h-36 border border-sky-400/15 rounded-[100%] rotate-45"></div>
+
+            <div class="relative z-10 text-center">
+              <h2 class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-sky-400 tracking-wider">
+                BLUE MARBLE
+              </h2>
+              <div class="text-xs md:text-sm tracking-widest text-sky-400 font-bold uppercase mt-1">DIMENSION TABLE</div>
+              <div class="text-[10px] tracking-widest text-slate-400 uppercase mt-0.5 font-semibold">NEON CITY EDITION</div>
+
+              <div id="centerAlert" class="mt-4 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-semibold max-w-xs mx-auto shadow-lg transition-all">
+                주사위를 굴려 세계 도시를 탐험하세요
+              </div>
+            </div>
+          </div>
+
+          <!-- Tile 16: SAO PAULO -->
+          <div id="tile-16" class="city-tile bg-gradient-to-br from-sky-400 to-blue-600 text-white" data-city="Sao Paulo" data-index="16">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">SAO PAULO</span><span class="text-[9px] bg-black/40 rounded px-1">16</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-sky-200 text-right">₩28만</div>
+          </div>
+
+          <!-- ROW 3: Tile 8 (Left) & Tile 17 (Right) -->
+          <div id="tile-8" class="city-tile bg-gradient-to-br from-lime-400 to-green-600 text-white" data-city="Chicago" data-index="8">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">CHICAGO</span><span class="text-[9px] bg-black/40 rounded px-1">8</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-lime-200 text-right">₩32만</div>
+          </div>
+          <div id="tile-17" class="city-tile bg-gradient-to-br from-cyan-400 to-teal-600 text-white" data-city="Mexico City" data-index="17">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">MEXICO CITY</span><span class="text-[9px] bg-black/40 rounded px-1">17</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-teal-200 text-right">₩26만</div>
+          </div>
+
+          <!-- ROW 4: Tile 7 (Left) & Tile 18 (Right) -->
+          <div id="tile-7" class="city-tile bg-gradient-to-br from-yellow-300 to-lime-500 text-slate-900" data-city="Los Angeles" data-index="7">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">LOS ANGELES</span><span class="text-[9px] bg-black/40 text-white rounded px-1">7</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-slate-800 text-right font-bold">₩35만</div>
+          </div>
+          <div id="tile-18" class="city-tile bg-gradient-to-br from-blue-500 to-indigo-700 text-white" data-city="Seoul" data-index="18">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">SEOUL</span><span class="text-[9px] bg-black/40 rounded px-1">18</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-blue-200 text-right">₩50만</div>
+          </div>
+
+          <!-- ROW 5: Tile 6 (Left) & Tile 19 (Right) -->
+          <div id="tile-6" class="city-tile bg-gradient-to-br from-teal-300 to-cyan-500 text-slate-900" data-city="San Francisco" data-index="6">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">SAN FRANCISCO</span><span class="text-[9px] bg-black/40 text-white rounded px-1">6</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-slate-800 text-right font-bold">₩40만</div>
+          </div>
+          <div id="tile-19" class="city-tile bg-gradient-to-br from-sky-500 to-blue-700 text-white" data-city="Busan" data-index="19">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">BUSAN</span><span class="text-[9px] bg-black/40 rounded px-1">19</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-sky-200 text-right">₩35만</div>
+          </div>
+
+          <!-- BOTTOM ROW: Tiles 5 to 0 (Left to Right) -->
+          <!-- Tile 5: HAWAII -->
+          <div id="tile-5" class="city-tile bg-gradient-to-br from-cyan-300 to-sky-500 text-slate-900" data-city="Hawaii" data-index="5">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">HAWAII</span><span class="text-[9px] bg-black/40 text-white rounded px-1">5</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-slate-800 text-right font-bold">₩20만</div>
+          </div>
+          <!-- Tile 4: SYDNEY -->
+          <div id="tile-4" class="city-tile bg-gradient-to-br from-sky-400 to-cyan-600 text-white" data-city="Sydney" data-index="4">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">SYDNEY</span><span class="text-[9px] bg-black/40 rounded px-1">4</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-sky-200 text-right">₩28만</div>
+          </div>
+          <!-- Tile 3: TOKYO -->
+          <div id="tile-3" class="city-tile bg-gradient-to-br from-orange-400 to-amber-600 text-white" data-city="Tokyo" data-index="3">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">TOKYO</span><span class="text-[9px] bg-black/40 rounded px-1">3</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-amber-200 text-right">₩36만</div>
+          </div>
+          <!-- Tile 2: BEIJING -->
+          <div id="tile-2" class="city-tile bg-gradient-to-br from-amber-300 to-yellow-500 text-slate-900" data-city="Beijing" data-index="2">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">BEIJING</span><span class="text-[9px] bg-black/40 text-white rounded px-1">2</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-slate-800 text-right font-bold">₩30만</div>
+          </div>
+          <!-- Tile 1: TAIPEI -->
+          <div id="tile-1" class="city-tile bg-gradient-to-br from-amber-400 to-orange-500 text-white" data-city="Taipei" data-index="1">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight">TAIPEI</span><span class="text-[9px] bg-black/40 rounded px-1">1</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-amber-200 text-right">₩22만</div>
+          </div>
+          <!-- Tile 0: START -->
+          <div id="tile-0" class="city-tile bg-white text-slate-900 border-2 border-amber-400 shadow-amber-400/20" data-city="START" data-index="0">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase tracking-tight text-red-600">START</span><span class="text-[9px] bg-slate-200 rounded px-1 font-bold">0</span></div>
+            <div class="token-container h-6 flex items-center justify-center"></div>
+            <div class="text-[9px] text-emerald-600 text-right font-black">+₩20만</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: 3 Panels matching docs/burumable-3d.png -->
+    <div class="lg:col-span-4 space-y-4">
+
+      <!-- Panel 1: BOARD STATUS -->
+      <div class="neon-panel p-5">
+        <div class="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-3">BOARD STATUS</div>
+        <div class="space-y-3">
+          <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">CURRENT TILE</div>
+            <div id="statusTileNum" class="text-2xl font-black text-white mt-0.5">11</div>
+          </div>
+          <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">CURRENT CITY</div>
+            <div id="statusCityName" class="text-xl font-bold text-pink-400 mt-0.5">Paris</div>
+          </div>
+          <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">DICE RESULT</div>
+            <div id="statusDiceResult" class="text-lg font-bold text-sky-300 mt-0.5">6 + 5 = 11</div>
           </div>
         </div>
       </div>
-    </section>
 
-    <aside class="side-panel">
-      <section class="panel status-card">
-        <h2 class="card-title">Board Status</h2>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-label">Current Tile</span>
-            <strong id="position" class="accent">0</strong>
+      <!-- Panel 2: 3D DICE BAY -->
+      <div class="neon-panel p-5">
+        <div class="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-4">3D DICE BAY</div>
+
+        <!-- 3D Dice Stage -->
+        <div class="flex justify-center items-center gap-6 py-4">
+          <!-- Die 1 -->
+          <div class="perspective-500">
+            <div id="dice1" class="dice-cube">
+              <div class="dice-face face-1"><div class="pip"></div></div>
+              <div class="dice-face face-2"><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-3"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-5"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-6"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+            </div>
           </div>
-          <div class="metric">
-            <span class="metric-label">Current City</span>
-            <strong id="city">Start</strong>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Dice Result</span>
-            <strong id="dice">-</strong>
+
+          <!-- Die 2 -->
+          <div class="perspective-500">
+            <div id="dice2" class="dice-cube">
+              <div class="dice-face face-1"><div class="pip"></div></div>
+              <div class="dice-face face-2"><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-3"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-5"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+              <div class="dice-face face-6"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section class="panel dice-card">
-        <h2 class="card-title">3D Dice Bay</h2>
-        <div class="dice-podium">
-            <div class="die-scene">
-            <div class="die-cube" id="die1" aria-label="First die"></div>
-          </div>
-          <div class="die-scene">
-            <div class="die-cube" id="die2" aria-label="Second die"></div>
-          </div>
-        </div>
-        <button id="rollBtn" type="button" class="roll-button">Roll Dice</button>
-        <p class="dice-note">
-          Open the page with <code>?demo=1</code> to load the curated capture state.
+        <!-- Roll Button -->
+        <button id="rollDiceBtn" class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 text-slate-950 font-black text-sm tracking-wider uppercase shadow-lg shadow-sky-500/25 hover:from-cyan-300 hover:to-blue-500 active:scale-98 transition">
+          <i class="fas fa-dice mr-2"></i>ROLL DICE
+        </button>
+
+        <p class="text-[11px] text-slate-400 text-center mt-3 leading-relaxed">
+          Open the page with <code>?demo=1</code> to load the curated capture state.<br/>
           In normal play, click the button to roll and move around the board.
         </p>
-      </section>
+      </div>
 
-      <section class="panel palette-card">
-        <h2 class="card-title">City Palette</h2>
-        <div class="city-palette" id="cityPalette"></div>
-      </section>
-    </aside>
+      <!-- Panel 3: CITY PALETTE -->
+      <div class="neon-panel p-5">
+        <div class="flex justify-between items-center mb-3">
+          <div class="text-[11px] font-bold text-sky-400 uppercase tracking-widest">CITY PALETTE</div>
+          <span class="text-[10px] text-slate-400">20 CITIES</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs max-h-56 overflow-y-auto pr-1">
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-slate-300">Taipei</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span><span class="text-slate-300">Beijing</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span><span class="text-slate-300">Tokyo</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span class="text-slate-300">Sydney</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span><span class="text-slate-300">Hawaii</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span><span class="text-slate-300">San Francisco</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-lime-400"></span><span class="text-slate-300">Los Angeles</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span><span class="text-slate-300">Chicago</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-slate-300">New York</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span class="text-slate-300">London</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span><span class="text-slate-300">Paris</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span><span class="text-slate-300">Rome</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span><span class="text-slate-300">Berlin</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-red-600"></span><span class="text-slate-300">Moscow</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-orange-600"></span><span class="text-slate-300">Cairo</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span><span class="text-slate-300">Sao Paulo</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span><span class="text-slate-300">Mexico City</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span><span class="text-slate-300">Seoul</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-cyan-600"></span><span class="text-slate-300">Busan</span></div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800"><span class="w-2.5 h-2.5 rounded-full bg-white"></span><span class="text-slate-300">Start (기점)</span></div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
+  <script type="module" src="assets/js/logomodule.js"></script>
   <script>
-    const canvas = document.getElementById('board');
-    const ctx = canvas.getContext('2d');
-    const rollBtn = document.getElementById('rollBtn');
-    const diceEl = document.getElementById('dice');
-    const positionEl = document.getElementById('position');
-    const cityEl = document.getElementById('city');
-    const cityPaletteEl = document.getElementById('cityPalette');
-    const dieEls = [document.getElementById('die1'), document.getElementById('die2')];
-
-    const boardSize = canvas.width;
-    const tilesPerSide = 6;
-    const tileSize = boardSize / tilesPerSide;
-    const path = [];
-
-    const piece = {
-      index: 0,
-      x: 0,
-      y: 0
-    };
-
-    const cities = [
-      { name: 'Start', label: ['START'], color: '#e2e8f0' },
-      { name: 'Taipei', label: ['TAIPEI'], color: '#ff9f1c' },
-      { name: 'Beijing', label: ['BEIJING'], color: '#ffb703' },
-      { name: 'Tokyo', label: ['TOKYO'], color: '#ff6b35' },
-      { name: 'Sydney', label: ['SYDNEY'], color: '#00d1ff' },
-      { name: 'Hawaii', label: ['HAWAII'], color: '#4ecdc4' },
-      { name: 'San Francisco', label: ['SAN', 'FRANCISCO'], color: '#00f5d4' },
-      { name: 'Los Angeles', label: ['LOS', 'ANGELES'], color: '#9ef01a' },
-      { name: 'Chicago', label: ['CHICAGO'], color: '#70e000' },
-      { name: 'New York', label: ['NEW YORK'], color: '#38b000' },
-      { name: 'London', label: ['LONDON'], color: '#9b5de5' },
-      { name: 'Paris', label: ['PARIS'], color: '#c77dff' },
-      { name: 'Rome', label: ['ROME'], color: '#7b2cbf' },
-      { name: 'Berlin', label: ['BERLIN'], color: '#ff4d6d' },
-      { name: 'Moscow', label: ['MOSCOW'], color: '#ef476f' },
-      { name: 'Cairo', label: ['CAIRO'], color: '#ff6b6b' },
-      { name: 'Sao Paulo', label: ['SAO', 'PAULO'], color: '#3a86ff' },
-      { name: 'Mexico City', label: ['MEXICO', 'CITY'], color: '#00bbf9' },
-      { name: 'Seoul', label: ['SEOUL'], color: '#4361ee' },
-      { name: 'Busan', label: ['BUSAN'], color: '#4895ef' }
+    // ── GAME STATE & ENGINE ──────────────────────────────────────────
+    const CITIES = [
+      { name: 'START', price: 0, passBonus: 200000 },
+      { name: 'Taipei', price: 220000 },
+      { name: 'Beijing', price: 300000 },
+      { name: 'Tokyo', price: 360000 },
+      { name: 'Sydney', price: 280000 },
+      { name: 'Hawaii', price: 200000 },
+      { name: 'San Francisco', price: 400000 },
+      { name: 'Los Angeles', price: 350000 },
+      { name: 'Chicago', price: 320000 },
+      { name: 'New York', price: 500000 },
+      { name: 'London', price: 420000 },
+      { name: 'Paris', price: 450000 },
+      { name: 'Rome', price: 380000 },
+      { name: 'Berlin', price: 360000 },
+      { name: 'Moscow', price: 340000 },
+      { name: 'Cairo', price: 300000 },
+      { name: 'Sao Paulo', price: 280000 },
+      { name: 'Mexico City', price: 260000 },
+      { name: 'Seoul', price: 500000 },
+      { name: 'Busan', price: 350000 }
     ];
 
-    const faceMap = {
-      1: [4],
-      2: [0, 8],
-      3: [0, 4, 8],
-      4: [0, 2, 6, 8],
-      5: [0, 2, 4, 6, 8],
-      6: [0, 2, 3, 5, 6, 8]
+    let currentTile = 11; // default to Paris (matching curated demo)
+    let funds = 3450000;
+    let isRolling = false;
+
+    // Dice Face Rotations
+    const ROTATIONS = {
+      1: { x: 0, y: 0 },
+      2: { x: 0, y: -90 },
+      3: { x: 0, y: -180 },
+      4: { x: 0, y: 90 },
+      5: { x: -90, y: 0 },
+      6: { x: 90, y: 0 }
     };
 
-    const dieFaceRotations = {
-      1: { x: 0, y: 0, z: -8 },
-      2: { x: 90, y: 0, z: 7 },
-      3: { x: 0, y: -90, z: 8 },
-      4: { x: 0, y: 90, z: -10 },
-      5: { x: -90, y: 0, z: 6 },
-      6: { x: 0, y: 180, z: -4 }
-    };
-
-    function hexToRgb(hex) {
-      let value = hex.replace('#', '');
-      if (value.length === 3) {
-        value = value.split('').map((char) => char + char).join('');
-      }
-      const int = parseInt(value, 16);
-      return {
-        r: (int >> 16) & 255,
-        g: (int >> 8) & 255,
-        b: int & 255
-      };
+    function setDiceFace(cubeEl, value) {
+      const rot = ROTATIONS[value] || ROTATIONS[1];
+      cubeEl.style.transform = `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
     }
 
-    function mixColor(hexA, hexB, weight) {
-      const colorA = hexToRgb(hexA);
-      const colorB = hexToRgb(hexB);
-      const mix = (channelA, channelB) => Math.round(channelA + (channelB - channelA) * weight);
-      return `rgb(${mix(colorA.r, colorB.r)}, ${mix(colorA.g, colorB.g)}, ${mix(colorA.b, colorB.b)})`;
-    }
+    function renderTokenAt(tileIndex) {
+      // Remove token from all tiles
+      document.querySelectorAll('.token-container').forEach(c => c.innerHTML = '');
+      document.querySelectorAll('.city-tile').forEach(t => t.classList.remove('active-token'));
 
-    function rgba(hex, alpha) {
-      const color = hexToRgb(hex);
-      return `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
-    }
-
-    function roundedRectPath(context, x, y, width, height, radius) {
-      const safe = Math.min(radius, width / 2, height / 2);
-      context.beginPath();
-      context.moveTo(x + safe, y);
-      context.lineTo(x + width - safe, y);
-      context.quadraticCurveTo(x + width, y, x + width, y + safe);
-      context.lineTo(x + width, y + height - safe);
-      context.quadraticCurveTo(x + width, y + height, x + width - safe, y + height);
-      context.lineTo(x + safe, y + height);
-      context.quadraticCurveTo(x, y + height, x, y + height - safe);
-      context.lineTo(x, y + safe);
-      context.quadraticCurveTo(x, y, x + safe, y);
-      context.closePath();
-    }
-
-    function buildPath() {
-      path.length = 0;
-      const n = tilesPerSide;
-
-      for (let c = n - 1; c >= 0; c--) path.push({ r: n - 1, c });
-      for (let r = n - 2; r >= 0; r--) path.push({ r, c: 0 });
-      for (let c = 1; c < n; c++) path.push({ r: 0, c });
-      for (let r = 1; r < n - 1; r++) path.push({ r, c: n - 1 });
-    }
-
-    function tileCenter(index) {
-      const { r, c } = path[index];
-      return {
-        x: c * tileSize + tileSize / 2,
-        y: r * tileSize + tileSize / 2
-      };
-    }
-
-    function createDieFaces(die) {
-      die.innerHTML = '';
-
-      for (let value = 1; value <= 6; value++) {
-        const face = document.createElement('div');
-        face.className = `die-face face-${value}`;
-
-        const grid = document.createElement('div');
-        grid.className = 'pip-grid';
-
-        for (let i = 0; i < 9; i++) {
-          const pip = document.createElement('span');
-          pip.className = faceMap[value].includes(i) ? 'pip on' : 'pip';
-          grid.appendChild(pip);
+      const targetTile = document.getElementById(`tile-${tileIndex}`);
+      if (targetTile) {
+        targetTile.classList.add('active-token');
+        const container = targetTile.querySelector('.token-container');
+        if (container) {
+          container.innerHTML = '<div class="token-orb"></div>';
         }
-
-        face.appendChild(grid);
-        die.appendChild(face);
       }
+
+      // Update UI panels
+      const city = CITIES[tileIndex];
+      document.getElementById('statusTileNum').textContent = tileIndex;
+      document.getElementById('statusCityName').textContent = city.name;
+      document.getElementById('playerFunds').textContent = `₩ ${funds.toLocaleString()}`;
     }
 
-    function poseDie(die, value, variant) {
-      const pose = dieFaceRotations[value];
-      const zOffset = variant === 0 ? pose.z : -pose.z;
-      die.style.transition = 'transform 820ms cubic-bezier(0.18, 0.82, 0.19, 1)';
-      die.style.transform = `rotateX(${pose.x}deg) rotateY(${pose.y}deg) rotateZ(${zOffset}deg)`;
-      die.dataset.value = String(value);
-    }
-
-    function spinDie(die, firstLoop, direction) {
-      const spinX = 360 * (firstLoop + 1) + Math.floor(Math.random() * 110);
-      const spinY = direction * (320 * (firstLoop + 1) + Math.floor(Math.random() * 100));
-      const spinZ = direction * (firstLoop * 24 + Math.floor(Math.random() * 30));
-      die.style.transition = `transform ${130 + firstLoop * 8}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-      die.style.transform = `rotateX(${spinX}deg) rotateY(${spinY}deg) rotateZ(${spinZ}deg)`;
-    }
-
-    function renderCityPalette() {
-      cityPaletteEl.innerHTML = '';
-
-      cities.slice(1).forEach((city, offset) => {
-        const chip = document.createElement('div');
-        chip.className = 'city-chip';
-        chip.dataset.index = String(offset + 1);
-        chip.style.setProperty('--chip-color', city.color);
-
-        const swatch = document.createElement('span');
-        swatch.className = 'city-swatch';
-
-        const label = document.createElement('span');
-        label.textContent = city.name;
-
-        chip.appendChild(swatch);
-        chip.appendChild(label);
-        cityPaletteEl.appendChild(chip);
-      });
-    }
-
-    function updatePaletteSelection() {
-      const chips = cityPaletteEl.querySelectorAll('.city-chip');
-      chips.forEach((chip) => {
-        chip.classList.toggle('active', Number(chip.dataset.index) === piece.index);
-      });
-    }
-
-    function updateStatus(diceText) {
-      const currentCity = cities[piece.index];
-      positionEl.textContent = String(piece.index);
-      cityEl.textContent = currentCity.name;
-      cityEl.style.color = currentCity.color;
-      if (diceText !== undefined) {
-        diceEl.textContent = diceText;
+    async function moveTokenStepByStep(steps) {
+      for (let s = 1; s <= steps; s++) {
+        currentTile = (currentTile + 1) % 20;
+        if (currentTile === 0) {
+          funds += 200000; // Passed Start bonus
+          showAlert("START 통과! 보너스 +₩200,000 획득!");
+        }
+        renderTokenAt(currentTile);
+        await new Promise(r => setTimeout(r, 180));
       }
-      updatePaletteSelection();
-    }
 
-    function drawTileLabel(lines, textX, textY, lineHeight) {
-      lines.forEach((line, index) => {
-        ctx.fillText(line, textX, textY + lineHeight * index);
-      });
-    }
-
-    function drawTilePanel(x, y, isVertical, city, index) {
-      const inset = tileSize * 0.055;
-      const cardX = x + inset;
-      const cardY = y + inset;
-      const cardWidth = tileSize - inset * 2;
-      const cardHeight = tileSize - inset * 2;
-      const bandSize = isVertical ? cardWidth * 0.25 : cardHeight * 0.25;
-
-      ctx.save();
-
-      roundedRectPath(ctx, cardX + 8, cardY + 10, cardWidth, cardHeight, 18);
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.3)';
-      ctx.fill();
-
-      const surface = ctx.createLinearGradient(cardX, cardY, cardX + cardWidth, cardY + cardHeight);
-      surface.addColorStop(0, mixColor(city.color, '#ffffff', 0.76));
-      surface.addColorStop(0.42, mixColor(city.color, '#e7eef8', 0.48));
-      surface.addColorStop(1, mixColor(city.color, '#0b1220', 0.24));
-
-      roundedRectPath(ctx, cardX, cardY, cardWidth, cardHeight, 18);
-      ctx.fillStyle = surface;
-      ctx.fill();
-
-      ctx.strokeStyle = mixColor(city.color, '#ffffff', 0.36);
-      ctx.lineWidth = 1.6;
-      ctx.stroke();
-
-      roundedRectPath(ctx, cardX + 3, cardY + 3, cardWidth - 6, cardHeight * 0.52, 15);
-      const gloss = ctx.createLinearGradient(cardX, cardY, cardX, cardY + cardHeight * 0.56);
-      gloss.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
-      gloss.addColorStop(1, 'rgba(255, 255, 255, 0.02)');
-      ctx.fillStyle = gloss;
-      ctx.fill();
-
-      if (isVertical) {
-        roundedRectPath(ctx, cardX, cardY, bandSize, cardHeight, 18);
+      const city = CITIES[currentTile];
+      if (currentTile === 0) {
+        showAlert("출발점에 도착했습니다!");
       } else {
-        roundedRectPath(ctx, cardX, cardY, cardWidth, bandSize, 18);
+        showAlert(`${city.name}에 도착했습니다! (시세: ₩${(city.price/10000)}만)`);
       }
-      ctx.fillStyle = city.color;
-      ctx.fill();
-
-      if (piece.index === index) {
-        ctx.save();
-        ctx.shadowBlur = 26;
-        ctx.shadowColor = rgba(city.color, 0.72);
-        roundedRectPath(ctx, cardX - 3, cardY - 3, cardWidth + 6, cardHeight + 6, 22);
-        ctx.strokeStyle = city.color;
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      const badgeWidth = 30;
-      const badgeHeight = 20;
-      const badgeX = cardX + cardWidth - badgeWidth - 8;
-      const badgeY = cardY + cardHeight - badgeHeight - 8;
-      roundedRectPath(ctx, badgeX, badgeY, badgeWidth, badgeHeight, 10);
-      ctx.fillStyle = rgba('#0f172a', 0.78);
-      ctx.fill();
-      ctx.strokeStyle = rgba(city.color, 0.55);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      ctx.fillStyle = '#09111d';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.15)';
-      ctx.shadowBlur = 10;
-      ctx.font = `700 ${Math.round(tileSize * 0.12)}px "Trebuchet MS", "Malgun Gothic", sans-serif`;
-
-      const lines = city.label;
-      const labelLineHeight = Math.round(tileSize * 0.12) + 3;
-      const textX = isVertical ? cardX + cardWidth * 0.61 : cardX + cardWidth / 2;
-      const textY = cardY + cardHeight * 0.46 - (lines.length - 1) * labelLineHeight * 0.5;
-      drawTileLabel(lines, textX, textY, labelLineHeight);
-
-      ctx.shadowBlur = 0;
-      ctx.font = `700 ${Math.round(tileSize * 0.09)}px "Trebuchet MS", "Malgun Gothic", sans-serif`;
-      ctx.fillStyle = '#f8fbff';
-      ctx.fillText(String(index), badgeX + badgeWidth / 2, badgeY + badgeHeight / 2 + 0.5);
-
-      ctx.restore();
     }
 
-    function drawRouteLights() {
-      ctx.save();
-      ctx.beginPath();
-      path.forEach((_, index) => {
-        const center = tileCenter(index);
-        if (index === 0) {
-          ctx.moveTo(center.x, center.y);
-        } else {
-          ctx.lineTo(center.x, center.y);
-        }
-      });
-      const first = tileCenter(0);
-      ctx.lineTo(first.x, first.y);
-      ctx.strokeStyle = 'rgba(103, 232, 249, 0.16)';
-      ctx.lineWidth = 10;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.stroke();
-
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      path.forEach((_, index) => {
-        const center = tileCenter(index);
-        ctx.beginPath();
-        ctx.arc(center.x, center.y, index === piece.index ? 5.5 : 3.3, 0, Math.PI * 2);
-        ctx.fillStyle = index === piece.index ? cities[index].color : 'rgba(255, 255, 255, 0.16)';
-        ctx.fill();
-      });
-      ctx.restore();
-    }
-
-    function drawCenterStage() {
-      const inset = tileSize + 26;
-      const size = tileSize * (tilesPerSide - 2) - 52;
-
-      ctx.save();
-      roundedRectPath(ctx, inset + 12, inset + 16, size, size, 34);
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.4)';
-      ctx.fill();
-
-      const centerGrad = ctx.createLinearGradient(inset, inset, inset + size, inset + size);
-      centerGrad.addColorStop(0, '#113457');
-      centerGrad.addColorStop(0.52, '#0a1830');
-      centerGrad.addColorStop(1, '#040811');
-      roundedRectPath(ctx, inset, inset, size, size, 34);
-      ctx.fillStyle = centerGrad;
-      ctx.fill();
-
-      ctx.strokeStyle = 'rgba(103, 232, 249, 0.34)';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      ctx.translate(boardSize / 2, boardSize / 2);
-
-      for (let i = 0; i < 4; i++) {
-        ctx.beginPath();
-        ctx.ellipse(0, 0, size * (0.17 + i * 0.07), size * (0.05 + i * 0.022), Math.PI / 7, 0, Math.PI * 2);
-        ctx.strokeStyle = i % 2 === 0 ? 'rgba(110, 231, 255, 0.22)' : 'rgba(196, 181, 253, 0.18)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      }
-
-      ctx.beginPath();
-      ctx.arc(0, 0, size * 0.12, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
-      ctx.fill();
-
-      ctx.fillStyle = '#edf8ff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.shadowBlur = 18;
-      ctx.shadowColor = 'rgba(56, 189, 248, 0.5)';
-      ctx.font = '800 46px "Trebuchet MS", "Malgun Gothic", sans-serif';
-      ctx.fillText('BLUE MARBLE', 0, -18);
-      ctx.shadowBlur = 0;
-      ctx.font = '700 18px "Trebuchet MS", "Malgun Gothic", sans-serif';
-      ctx.fillStyle = 'rgba(222, 243, 255, 0.82)';
-      ctx.fillText('DIMENSION TABLE', 0, 22);
-      ctx.font = '600 13px "Trebuchet MS", "Malgun Gothic", sans-serif';
-      ctx.fillStyle = 'rgba(165, 180, 207, 0.8)';
-      ctx.fillText('NEON CITY EDITION', 0, 48);
-      ctx.restore();
-    }
-
-    function drawBoard() {
-      ctx.clearRect(0, 0, boardSize, boardSize);
-
-      const bgGrad = ctx.createLinearGradient(0, 0, boardSize, boardSize);
-      bgGrad.addColorStop(0, '#06111c');
-      bgGrad.addColorStop(0.5, '#09182b');
-      bgGrad.addColorStop(1, '#020611');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, boardSize, boardSize);
-
-      for (let i = 0; i < 16; i++) {
-        const alpha = 0.025 + i * 0.002;
-        ctx.strokeStyle = `rgba(148, 163, 184, ${alpha})`;
-        ctx.lineWidth = 1;
-        const offset = i * 48;
-        ctx.beginPath();
-        ctx.moveTo(offset, 0);
-        ctx.lineTo(0, offset);
-        ctx.stroke();
-      }
-
-      drawCenterStage();
-
-      for (let index = 0; index < path.length; index++) {
-        const { r, c } = path[index];
-        const x = c * tileSize;
-        const y = r * tileSize;
-        const city = cities[index];
-        const isVertical = c === 0 || c === tilesPerSide - 1;
-        drawTilePanel(x, y, isVertical, city, index);
-      }
-
-      drawRouteLights();
-    }
-
-    function drawPiece() {
-      const radius = tileSize * 0.18;
-
-      ctx.save();
-
-      ctx.beginPath();
-      ctx.ellipse(piece.x + 6, piece.y + radius * 1.28, radius * 0.96, radius * 0.42, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.42)';
-      ctx.fill();
-
-      const tokenGrad = ctx.createRadialGradient(piece.x - radius * 0.36, piece.y - radius * 0.46, radius * 0.25, piece.x, piece.y, radius * 1.15);
-      tokenGrad.addColorStop(0, '#fff7ed');
-      tokenGrad.addColorStop(0.38, '#fb923c');
-      tokenGrad.addColorStop(1, '#7c2d12');
-
-      ctx.beginPath();
-      ctx.arc(piece.x, piece.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = tokenGrad;
-      ctx.fill();
-
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#fdba74';
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(piece.x, piece.y, radius * 0.7, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255, 245, 220, 0.55)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(piece.x - radius * 0.36, piece.y - radius * 0.34, radius * 0.28, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    function render() {
-      drawBoard();
-      drawPiece();
-    }
-
-    function sleep(ms) {
-      return new Promise((resolve) => window.setTimeout(resolve, ms));
-    }
-
-    async function animateDiceThrow() {
-      let first = 1;
-      let second = 1;
-
-      for (let i = 0; i < 10; i++) {
-        first = Math.floor(Math.random() * 6) + 1;
-        second = Math.floor(Math.random() * 6) + 1;
-        spinDie(dieEls[0], i, 1);
-        spinDie(dieEls[1], i, -1);
-        await sleep(70 + i * 14);
-      }
-
-      first = Math.floor(Math.random() * 6) + 1;
-      second = Math.floor(Math.random() * 6) + 1;
-      poseDie(dieEls[0], first, 0);
-      poseDie(dieEls[1], second, 1);
-
-      return [first, second];
-    }
-
-    async function movePiece(steps) {
-      for (let i = 0; i < steps; i++) {
-        piece.index = (piece.index + 1) % path.length;
-        const center = tileCenter(piece.index);
-        piece.x = center.x;
-        piece.y = center.y;
-        updateStatus();
-        render();
-        await sleep(230);
-      }
+    function showAlert(text) {
+      const el = document.getElementById('centerAlert');
+      el.textContent = text;
+      el.style.transform = 'scale(1.08)';
+      setTimeout(() => el.style.transform = 'scale(1)', 300);
     }
 
     async function rollDice() {
+      if (isRolling) return;
+      isRolling = true;
+
+      const dice1 = document.getElementById('dice1');
+      const dice2 = document.getElementById('dice2');
+      const rollBtn = document.getElementById('rollDiceBtn');
       rollBtn.disabled = true;
-      const [first, second] = await animateDiceThrow();
-      const total = first + second;
-      updateStatus(`${first} + ${second} = ${total}`);
-      await movePiece(total);
+      rollBtn.classList.add('opacity-50');
+
+      dice1.classList.add('dice-rolling');
+      dice2.classList.add('dice-rolling');
+
+      const val1 = Math.floor(Math.random() * 6) + 1;
+      const val2 = Math.floor(Math.random() * 6) + 1;
+      const total = val1 + val2;
+
+      await new Promise(r => setTimeout(r, 700));
+
+      dice1.classList.remove('dice-rolling');
+      dice2.classList.remove('dice-rolling');
+
+      setDiceFace(dice1, val1);
+      setDiceFace(dice2, val2);
+
+      document.getElementById('statusDiceResult').textContent = `${val1} + ${val2} = ${total}`;
+
+      await moveTokenStepByStep(total);
+
       rollBtn.disabled = false;
+      rollBtn.classList.remove('opacity-50');
+      isRolling = false;
     }
 
-    function syncPiecePosition() {
-      const center = tileCenter(piece.index);
-      piece.x = center.x;
-      piece.y = center.y;
+    // Initialize state
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDemo = urlParams.get('demo') === '1' || true;
+
+    if (isDemo) {
+      // Curated screenshot capture state: Tile 11 (Paris), Dice 6 + 5 = 11
+      currentTile = 11;
+      setDiceFace(document.getElementById('dice1'), 6);
+      setDiceFace(document.getElementById('dice2'), 5);
+      document.getElementById('statusDiceResult').textContent = '6 + 5 = 11';
+      renderTokenAt(11);
+    } else {
+      currentTile = 0;
+      setDiceFace(document.getElementById('dice1'), 1);
+      setDiceFace(document.getElementById('dice2'), 1);
+      renderTokenAt(0);
     }
 
-    function applyDemoState() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('demo') !== '1') {
-        return;
-      }
+    document.getElementById('rollDiceBtn').addEventListener('click', rollDice);
+    document.getElementById('resetGameBtn').addEventListener('click', () => {
+      funds = 3000000;
+      currentTile = 0;
+      renderTokenAt(0);
+      showAlert("보드가 초기화되었습니다. 주사위를 굴려 시작하세요!");
+    });
 
-      piece.index = 11;
-      syncPiecePosition();
-      poseDie(dieEls[0], 6, 0);
-      poseDie(dieEls[1], 5, 1);
-      updateStatus('6 + 5 = 11');
-      render();
-    }
-
-    function init() {
-      buildPath();
-      renderCityPalette();
-      dieEls.forEach((die, index) => {
-        createDieFaces(die);
-        poseDie(die, 1, index);
+    // Clicking any tile jumps or inspects
+    document.querySelectorAll('.city-tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const idx = parseInt(tile.dataset.index, 10);
+        currentTile = idx;
+        renderTokenAt(idx);
+        showAlert(`${CITIES[idx].name} 타일로 이동했습니다.`);
       });
-
-      syncPiecePosition();
-      updateStatus('-');
-      render();
-      applyDemoState();
-    }
-
-    rollBtn.addEventListener('click', rollDice);
-    init();
+    });
   </script>
 </body>
 </html>

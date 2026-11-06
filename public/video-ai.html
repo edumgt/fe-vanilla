@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>동영상 분석 / AI 생성 판별 - EDUMGT</title>
+  <link href="assets/css/default.css" rel="stylesheet" />
+  <link href="assets/css/box-video-ai.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="box-page-body">
+  <div id="cmmContainer"></div>
+  <nav class="breadcrumb">동영상 분석 / AI 생성 판별</nav>
+
+  <div id="content" class="space-y-6">
+    <!-- Hero Panel (docs/box-ai-playwright.png 상단) -->
+    <header class="hero-panel">
+      <div>
+        <div class="hero-eyebrow"><i class="fas fa-shield-alt mr-1"></i>VISUAL FORENSICS MODULE</div>
+        <h1 class="hero-title">업로드한 MP4가 AI 생성 영상인지<br />프레임 단위로 추정합니다</h1>
+        <p class="hero-copy">브라우저에서 바로 메타데이터, 미세 질감, 채도, 하이라이트, 프레임 간 변화량을 샘플링해 생성형 영상 패턴을 점수화합니다.</p>
+      </div>
+      <div class="hero-chip-grid">
+        <div class="hero-chip">
+          <span>분석 신호</span>
+          <strong>7종</strong>
+        </div>
+        <div class="hero-chip">
+          <span>프레임 샘플링</span>
+          <strong>최대 8개</strong>
+        </div>
+        <div class="hero-chip">
+          <span>지원 포맷</span>
+          <strong>MP4</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Upload Dropzone -->
+    <section id="uploadBox" class="upload-dropzone">
+      <div class="upload-kicker"><i class="fas fa-cloud-upload-alt mr-1"></i>UPLOAD VIDEO</div>
+      <strong>Drag &amp; Drop 또는 클릭해서 동영상을 올리세요</strong>
+      <span class="text-xs">로컬에서만 분석하며, 업로드한 파일은 외부 서버로 전송하지 않습니다.</span>
+      <input type="file" id="fileInput" accept="video/mp4,video/*" class="hidden" />
+    </section>
+
+    <!-- Content Grid (2 Columns: Preview vs Verdict/Indicators) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Left Column: Video Preview & Metadata & Why -->
+      <div class="lg:col-span-5 space-y-4">
+        <!-- Preview Card -->
+        <div class="surface-card bg-white rounded-2xl p-5 border">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-gray-400 tracking-wider">PREVIEW</span>
+            <span id="analysisStatus" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600">대기</span>
+          </div>
+          <div class="relative bg-black rounded-xl overflow-hidden aspect-video flex items-center justify-center">
+            <video id="videoPlayer" controls class="w-full h-full object-contain"></video>
+            <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 text-xs bg-slate-900 pointer-events-none">
+              <i class="fas fa-play-circle text-4xl mb-2 text-slate-500"></i>
+              <span>영상을 업로드하면 미리보기가 재생됩니다</span>
+            </div>
+          </div>
+
+          <!-- Metadata table -->
+          <div class="mt-4 divide-y text-xs">
+            <div class="py-2 flex justify-between"><span class="text-gray-500">파일명</span><strong id="fileName">-</strong></div>
+            <div class="py-2 flex justify-between"><span class="text-gray-500">길이</span><strong id="metaDuration">-</strong></div>
+            <div class="py-2 flex justify-between"><span class="text-gray-500">해상도</span><strong id="metaResolution">-</strong></div>
+            <div class="py-2 flex justify-between"><span class="text-gray-500">비트레이트</span><strong id="metaBitrate">-</strong></div>
+            <div class="py-2 flex justify-between"><span class="text-gray-500">샘플 프레임</span><strong id="metaSamples">0개</strong></div>
+          </div>
+        </div>
+
+        <!-- Why Panel -->
+        <div class="surface-card bg-white rounded-2xl p-5 border">
+          <div class="text-xs font-bold text-gray-400 tracking-wider mb-2">WHY</div>
+          <h3 class="text-sm font-bold text-gray-800 mb-3">주요 판정 근거</h3>
+          <ul id="highlightList" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Right Column: Verdict Card, Indicators & Frame Chart -->
+      <div class="lg:col-span-7 space-y-4">
+        <!-- Verdict Summary Card -->
+        <div id="resultCard" class="surface-card bg-white rounded-2xl p-6 border" data-tone="idle">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-gray-400 tracking-wider">VERDICT</span>
+            <span id="verdictBadge" class="status-badge status-idle">대기</span>
+          </div>
+          <div class="text-xs text-gray-500">AI 생성 여부 추정 결과</div>
+          <h2 id="verdict" class="text-2xl font-bold text-gray-800 mt-1 mb-2">분석 대기 중</h2>
+          <p id="resultSummary" class="text-xs text-gray-600 leading-relaxed">영상을 업로드하면 포렌식 알고리즘이 프레임을 분석하여 종합 판정 결과를 제시합니다.</p>
+
+          <!-- 4 Score Metric Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+            <div class="p-3 bg-gray-50 rounded-xl border text-center">
+              <div class="text-[11px] text-gray-500">AI 생성 가능성</div>
+              <div id="aiProbability" class="text-lg font-bold text-gray-800 mt-0.5">-</div>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-xl border text-center">
+              <div class="text-[11px] text-gray-500">판정 신뢰도</div>
+              <div id="confidence" class="text-lg font-bold text-gray-800 mt-0.5">-</div>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-xl border text-center">
+              <div class="text-[11px] text-gray-500">평균 프레임 점수</div>
+              <div id="frameAverage" class="text-lg font-bold text-gray-800 mt-0.5">-</div>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-xl border text-center">
+              <div class="text-[11px] text-gray-500">평균 밝기 변화</div>
+              <div id="temporalDelta" class="text-lg font-bold text-gray-800 mt-0.5">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicators Grid -->
+        <div class="surface-card bg-white rounded-2xl p-6 border">
+          <div class="text-xs font-bold text-gray-400 tracking-wider mb-2">INDICATORS</div>
+          <h3 class="text-sm font-bold text-gray-800 mb-4">세부 지표</h3>
+          <div id="indicatorList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+
+        <!-- Frame Chart Card -->
+        <div class="surface-card bg-white rounded-2xl p-6 border">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="text-xs font-bold text-gray-400 tracking-wider">FRAMES</div>
+              <h3 class="text-sm font-bold text-gray-800">프레임별 AI 가능성 점수</h3>
+            </div>
+            <button id="toggleChartBtn" class="text-xs font-semibold px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition">Bar 차트로 보기</button>
+          </div>
+          <div class="relative h-64 w-full">
+            <canvas id="frameChart"></canvas>
+            <div id="chartEmptyState" class="absolute inset-0 flex items-center justify-center text-xs text-gray-400">
+              영상을 분석하면 프레임별 시계열 점수가 차트로 렌더링됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script type="module" src="assets/js/logomodule.js"></script>
+  <script type="module" src="assets/js/box-video-page.js"></script>
+</body>
+</html>
