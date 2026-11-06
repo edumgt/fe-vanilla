@@ -1,37 +1,82 @@
-# AI 기반 관리자 모드 SaaS, PaaS
+# EDUMGT Admin Portal
 
-> 정적 HTML/Vanilla JavaScript 화면, FastAPI 백엔드, 그리고 AWS·Docker·Kubernetes 배포 스캐폴드를 함께 제공하는 데모 저장소입니다.
+> Static HTML/Vanilla JavaScript admin screens, an Express 5 BFF on port 3000, and a Python FastAPI forensics microservice on port 8000. Three UI domains: general operations, AI intelligence, and a 3D game frontend.
 
-## 프로젝트 개요
+Local entrypoint is `npm run dev` (`tsx server.ts`), not `./run_backend.sh`. `backend_fastapi/` only has `.env.example`. Human docs: [README.md](README.md) (English) and [readme-kr.md](readme-kr.md) (Korean). This file is the source map for coding agents. If a module README disagrees with the route tables below, trust the source files named here.
 
-- `public/`에는 관리자 기능별 HTML 화면과 프론트엔드 JavaScript, CSS, 이미지 및 정적 자산이 있습니다.
-- `backend_fastapi/`는 현재 기준 백엔드이며, 정적 파일 서빙과 로그인/JWT 및 화면용 API를 제공합니다.
-- `backend/`는 레거시 백엔드 구현으로, 신규 변경 기준이 아닙니다.
-- `infra/`와 `scripts/`에는 배포 스캐폴드와 관련 자동화가 있습니다.
-- 루트의 `run_backend.sh`로 로컬 애플리케이션을 실행합니다.
+## Docs
 
-## 주요 문서
+- [README.md](README.md): English quick start, live routes, CDN, scaffold warnings
+- [readme-kr.md](readme-kr.md): Korean equivalent, plus the screen-capture gallery
+- [ARCHITECTURE.md](ARCHITECTURE.md): FSD/DDD, BFF, and hexagonal notes. Some sentences still describe a Python proxy and deep-learning inference that the current handlers do not perform
+- [fe/README.md](fe/README.md): frontend domain boundaries
+- [nodejs/README.md](nodejs/README.md): Express layering and port invariant
+- [python/README.md](python/README.md): FastAPI layout
+- [docs/api-mapping.md](docs/api-mapping.md): stale. Still points at removed `backend_fastapi` and port 8000
 
-- [저장소 개요, 빠른 시작 및 아키텍처](Readme.md)
-- [화면별 API 매핑 및 API 기준](docs/api-mapping.md)
-- [기준 백엔드 안내 및 실행 방법](backend_fastapi/README.md)
-- [AWS 서버리스 배포 스캐폴드](infra/aws/README.md)
-- [Docker Compose 배포 스캐폴드](infra/docker/README.md)
-- [Kubernetes 배포 스캐폴드](infra/k8s/README.md)
+## Run
 
-## 주요 소스
+- [server.ts](server.ts): listens on `0.0.0.0:3000` and calls `createApp()`
+- [package.json](package.json): `dev`/`start` = `tsx server.ts`, `build`/`lint` = `tsc --noEmit`
+- [tsconfig.json](tsconfig.json): includes `server.ts`, `nodejs/**/*`, `fe/**/*`
+- Python, from repo root: `uvicorn python.app.main:app --host 0.0.0.0 --port 8000`
+- Demo login: `admin` / `manager` / `guest`, password `1111`. Tokens are unsigned demo strings
 
-- `public/`: 정적 화면 및 브라우저 자산
-- `public/assets/js/`: 화면 및 공통 기능의 JavaScript
-- `backend_fastapi/app/`: FastAPI 애플리케이션, API, 모델, 설정
-- `infra/aws/`: AWS SAM 및 Lambda 배포 구성
-- `infra/docker/`: 온프레미스 Docker Compose 및 Nginx 구성
-- `infra/k8s/`: Kubernetes base 리소스와 개발 overlay
-- `scripts/`: AWS 및 CI/CD 관련 스크립트
-- `tests/`: 자동화 테스트
+## Express BFF (`nodejs/`)
 
-## 실행 및 테스트
+- [nodejs/src/app.ts](nodejs/src/app.ts): CORS, JSON, auth middleware, `POST /upload/image`, `/infra` and `public/` static, extensionless HTML, fallback to `index.html`
+- [nodejs/src/config/env.ts](nodejs/src/config/env.ts): port 3000 is not overridable. `PYTHON_MICROSERVICE_URL` defaults to `http://localhost:8000` and is unused by current controllers
+- [nodejs/src/routes/index.ts](nodejs/src/routes/index.ts): `/health`, `/health/live`, `/health/ready`, mounts auth/general/ai routers
+- [nodejs/src/routes/auth.routes.ts](nodejs/src/routes/auth.routes.ts): `POST /login`, `POST /auth/refresh`, `GET /protected`
+- [nodejs/src/controllers/auth.controller.ts](nodejs/src/controllers/auth.controller.ts): demo users and token fields (`token`, `accessToken`, `access_token`, `refreshToken`)
+- [nodejs/src/routes/general.routes.ts](nodejs/src/routes/general.routes.ts): `/api/menu`, `/api/data`, `/api/save`, `/api/delete`, WMS `/db/inbound|outbound`, `/db/query`, calendar, code groups, todos, bookings
+- [nodejs/src/routes/ai.routes.ts](nodejs/src/routes/ai.routes.ts): glossary CRUD, `GET /api/ceo-news`, `POST /api/video-forensics/analyze`
+- [nodejs/src/controllers/ai.controller.ts](nodejs/src/controllers/ai.controller.ts): in-memory glossary and a fixed simulated forensics JSON. Does not call Python
+- [nodejs/src/services/store.service.ts](nodejs/src/services/store.service.ts): in-memory store. Lost on restart
+- [nodejs/src/middlewares/index.ts](nodejs/src/middlewares/index.ts): request log (errors, or all lines if `DEBUG_LOGS=true`), bearer parse, JSON error handler
 
-- 로컬 실행: `./run_backend.sh`
-- 동영상 AI 판별 모듈 단위 테스트: `node --test tests/video-ai-core.test.mjs`
-- 화면별 API와 확인 항목은 [API 매핑 문서](docs/api-mapping.md)를 참고하세요.
+## Python microservice (`python/`)
+
+- [python/app/main.py](python/app/main.py): lifespan, CORS, `GET /health`, mounts `/api/v1`
+- [python/app/core/config.py](python/app/core/config.py): `API_V1_PREFIX=/api/v1`, port 8000
+- [python/app/api/v1/router.py](python/app/api/v1/router.py): general + forensics routers
+- [python/app/api/v1/endpoints/forensics.py](python/app/api/v1/endpoints/forensics.py): `POST /api/v1/forensics/analyze`
+- [python/app/services/forensics_service.py](python/app/services/forensics_service.py): score builder from duration and frame sample count. No MP4 decode, no trained model
+- [python/app/api/v1/endpoints/general.py](python/app/api/v1/endpoints/general.py): `GET /api/v1/menu`, `GET /api/v1/health`
+- [python/Dockerfile](python/Dockerfile): build context is `python/`. Image CMD uses `python.app.main:app`
+- Docs UI: `/api/v1/docs`, `/api/v1/redoc`
+
+## Frontend
+
+- [public/index.html](public/index.html): portal hub. Links the three pillars and calls `POST /login`
+- [public/](public/): one HTML file per screen. Served by Express
+- [public/assets/js/](public/assets/js/): screen scripts. Prefer same-origin `fetch` or `window.APP_API_BASE`
+- [public/assets/mock/](public/assets/mock/): static JSON used by screens that do not call the BFF
+- [fe/src/index.ts](fe/src/index.ts): barrel for `domains/general`, `domains/ai`, `domains/game`, `shared/`
+- [fe/src/shared/api/client.ts](fe/src/shared/api/client.ts): `window.APP_API_BASE`, token from `localStorage` `token` or `accessToken`
+- [fe/src/domains/game/dice.engine.ts](fe/src/domains/game/dice.engine.ts): pure dice/board move helpers
+- CDN on main pages: cdnjs Font Awesome 5.15.4, Toast UI CDN, jsDelivr Pikaday, Tailwind CDN script. `public/assets/vendor/` is a leftover local copy
+
+## Screens to open first
+
+- General: [public/system.html](public/system.html), [public/calendar.html](public/calendar.html), [public/flow.html](public/flow.html), [public/trello.html](public/trello.html), [public/orgtree.html](public/orgtree.html)
+- AI: [public/aistock.html](public/aistock.html), [public/video-ai.html](public/video-ai.html), [public/ceo-diary.html](public/ceo-diary.html), [public/glos.html](public/glos.html)
+- Game: [public/burumable.html](public/burumable.html) (`?demo=1` for the capture state), [public/4.html](public/4.html)
+- PaaS console: [public/config.html](public/config.html)
+
+## Tests
+
+- [tests/video-ai-core.test.mjs](tests/video-ai-core.test.mjs): `node --test tests/video-ai-core.test.mjs`
+- [tests/playwright/box_capture_test.py](tests/playwright/box_capture_test.py): Docker Playwright capture for the older box flow
+
+## Optional / stale scaffolds
+
+- [infra/aws/template.yaml](infra/aws/template.yaml): SAM HttpApi + Lambda. Handler is `lambda_handler.handler`
+- [infra/aws/lambda_handler.py](infra/aws/lambda_handler.py): `Mangum` import of removed `app.main`
+- [infra/aws/Makefile](infra/aws/Makefile): copies missing `backend_fastapi/app`
+- [run_backend.sh](run_backend.sh): still bootstraps removed FastAPI + Postgres. Not the current server
+- [docker-compose.yml](docker-compose.yml): builds `./backend_fastapi`. Not the current server
+- [infra/k8s/](infra/k8s/): Kubernetes base and `overlays/dev`
+- [scripts/cicd/](scripts/cicd/): `ci.sh`, `deploy.sh`, `pipeline.sh`
+- [scripts/aws/](scripts/aws/): `01`–`03` serverless bootstrap, `11`–`12` optional EKS steering
+
